@@ -1,53 +1,421 @@
-<HTML>
-<HEAD>
-<TITLE>Agent Intro Test.sbq6</TITLE>
-
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<META content="Storyboard created with StoryBoard Quick 6 by PowerProduction Software, www.powerproduction.com" name="description">
-	<!-- Call for information or to place an order, 800.457.0383 or 408.559.0800 -->
-<style type="text/css">
-<!--
-BODY {
-background-image: url(bg2.gif);
-background-repeat: no-repeat;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 3: The Holographic Philosopher Studio</title>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+body { font-family: 'Inter', sans-serif; }
+.gradient-bg { background: linear-gradient(135deg, #0f172a 0%, #334155 100%); }
+.holographic-card { 
+    background: rgba(255, 255, 255, 0.95); 
+    border: 1px solid #e2e8f0; 
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
 }
-.style1 {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 14px;
+.holographic-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+.fade-in { animation: fadeIn 0.5s ease-in; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body class="bg-slate-50">
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+// --- DATA STRUCTURES: CIB / HOLOGRAPHIC FRAMEWORK ---
+
+const PHILOSOPHERS = {
+    socrates: {
+        name: "Socrates",
+        era: "Ancient Greece",
+        image: "🏛️",
+        cibModel: {
+            IK: "Virtue is Knowledge; The unexamined life is entropy (not worth living).",
+            HS: "Detects logical contradictions in social 'noise'; sees ignorance where others see certainty.",
+            AH: "Athenian democracy; Oral tradition; Sophist debates.",
+            Cons: "Elenchus (The Dialectic Method) - a recursive error-correction algorithm.",
+            Meta: "Irony & Aporia - inducing a 'crash' in the interlocutor's CIB to force a reboot."
+        },
+        toulmin: {
+            claim: "We must prioritize the care of the soul over the body.",
+            grounds: "Observed contradictions in the pursuit of wealth/power (Data on HS).",
+            warrant: "The soul is the seat of the Identity Kernel; if the Kernel is corrupt, the system fails (Logic of IK)."
+        }
+    },
+    aristotle: {
+        name: "Aristotle",
+        era: "Ancient Greece",
+        image: "📖",
+        cibModel: {
+            IK: "Teleology (Function); Eudaimonia (Flourishing) via Habituation.",
+            HS: "Sees 'Natural Kinds' and biological hierarchies; filters world through functional purpose.",
+            AH: "Macedonian court; Biology studies; The Lyceum.",
+            Cons: "Syllogism; Classification; Habit (Hexis) as thermodynamic efficiency.",
+            Meta: "Limited. Rigid hierarchy ($c_{mid}$) prevents seeing women/slaves as full agents."
+        },
+        toulmin: {
+            claim: "Virtue is a mean between extremes.",
+            grounds: "Observation of successful natural systems (Data on HS).",
+            warrant: "Nature abhors excess; the 'Good' is the efficient functioning of the form (Logic of IK)."
+        }
+    },
+    maathai: {
+        name: "Wangari Maathai",
+        era: "Contemporary",
+        image: "🌳",
+        cibModel: {
+            IK: "Ecological & Social Justice are one CIB; The tree is a symbol of agency.",
+            HS: "Sees causal link: Deforestation -> Soil Erosion -> Poverty -> Political Weakness.",
+            AH: "Colonial Kenya; Biological training; Kikuyu tradition.",
+            Cons: "Tree Planting - a 'Keystone Constructor' that repairs both soil and social fabric.",
+            Meta: "Motu - 'empowerment'. Rewriting the self-image of rural women from 'victim' to 'forester'."
+        },
+        toulmin: {
+            claim: "We must plant trees to restore democracy.",
+            grounds: "Environmental degradation leads to resource scarcity and conflict (Data on HS).",
+            warrant: "A distinct 'Self' requires a viable 'Substrate'; protecting the land protects the Identity Kernel (Logic of IK)."
+        }
+    },
+    mandela: {
+        name: "Nelson Mandela",
+        era: "Contemporary",
+        image: "🕊️",
+        cibModel: {
+            IK: "Ubuntu ('I am because we are'); Reconciliation over Revenge.",
+            HS: "Sees the oppressor as a prisoner of their own hatred (Signal), not just a monster (Noise).",
+            AH: "Xhosa royalty; Apartheid prison (27 years); Legal training.",
+            Cons: "Truth & Reconciliation Commission (TRC) - a 'Civic Loop' to process trauma.",
+            Meta: "Forgiveness - A radical rewriting of the 'Enemy Script' to prevent thermal runaway (civil war)."
+        },
+        toulmin: {
+            claim: "Freedom is indivisible; the chains on any one of my people were the chains on all of them.",
+            grounds: "Systemic observation of the effects of domination (Data on HS).",
+            warrant: "Identity is distributed (Ubuntu); damage to the network is damage to the node (Logic of IK)."
+        }
+    },
+    boisjoly: {
+        name: "Roger Boisjoly",
+        era: "Modern Engineering",
+        image: "🚀",
+        cibModel: {
+            IK: "Engineering Ethics; Fidelity to Data over Hierarchy.",
+            HS: "Sees O-ring erosion data as a 'Fatal Signal'; Managers see it as 'Acceptable Risk'.",
+            AH: "Morton Thiokol; Engineering training; Previous flight data.",
+            Cons: "The Memo - an attempt to inject signal into a deaf system.",
+            Meta: "Whistleblowing - breaking the 'Dark Coherence' of the organization to save truth."
+        },
+        toulmin: {
+            claim: "The launch must be stopped.",
+            grounds: "Temperature readings are below safety thresholds (Data on HS).",
+            warrant: "Physics does not negotiate with management schedules (Logic of IK)."
+        }
+    }
+};
+
+// --- APP COMPONENTS ---
+
+function App() {
+    const = useState('intro');
+    const [progress, setProgress] = useState(0);
+    const [userModel, setUserModel] = useState({ name: "", ik: "", hs: "" });
+
+    const nav = (id) => setSection(id);
+
+    return (
+        <div className="min-h-screen flex flex-col">
+            <header className="gradient-bg text-white p-6 shadow-lg">
+                <div className="max-w-5xl mx-auto">
+                    <h1 className="text-3xl font-bold tracking-tight">The Holographic Philosopher Studio</h1>
+                    <p className="text-blue-200 mt-2">CIB Architecture & Meta-Construction Workbook</p>
+                </div>
+            </header>
+
+            <main className="flex-grow bg-slate-50 p-6">
+                <div className="max-w-5xl mx-auto">
+                    {/* Progress & Nav */}
+                    <div className="flex space-x-2 mb-8 overflow-x-auto pb-2">
+                        {.map((item) => (
+                            <button 
+                                key={item} 
+                                onClick={() => nav(item.toLowerCase())}
+                                className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
+                                    section === item.toLowerCase() 
+                                   ? 'bg-slate-800 text-white shadow-md' 
+                                    : 'bg-white text-slate-600 hover:bg-slate-100'
+                                }`}
+                            >
+                                {item}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Content Area */}
+                    <div className="fade-in">
+                        {section === 'intro' && <IntroView nav={nav} />}
+                        {section === 'theory' && <TheoryView />}
+                        {section === 'notation' && <NotationView />}
+                        {section === 'exemplars' && <ExemplarsView />}
+                        {section === 'modeling' && <ModelingView userModel={userModel} setUserModel={setUserModel} />}
+                        {section === 'capstone' && <CapstoneView userModel={userModel} />}
+                    </div>
+                </div>
+            </main>
+        </div>
+    );
 }
-.style2 {color: #FFFFFF}
--->
-    </style>
-</HEAD>
-<BODY bgcolor="black" text="white" alink=gray vlink=gray link=gray>
-<CENTER><font color="gray">Storyboard created with <a href = "http://www.powerproduction.com/">StoryBoard Quick 6</a> by PowerProduction Software</CENTER>
-	<!-- hi mom -->
-	<hr width="50%">
-		<!-- Navigation Bar (First,Previous,Next,Last) -->
-		<CENTER><font color=gray>First</font> | <font color=gray>Previous</font> | <a href=Page-002.html>Next</a> | <a href=Page-013.html>Last</a></CENTER>
-	<hr width="50%">
 
-<!-- Start Frame -->
-<center>
-	<table width=600>
-		<tr>
-			<td align=left>Frame#1</td>
-		</tr>
-		<tr>
-			<td align=center><font color=black><img border=1 src="Frame-0001.jpg"></font></td>
-		</tr>
-		<tr>
-			<td align=left>This is our representation of an agent.&nbsp;&nbsp;An agent has agency and is effected by other agents and also effects other agents. You are an agent and everyone you have ever met is an agent and everyone thorughout history and everyone alive today is an agent.<br><td>
-		</tr>
-	</table>
-</center>
-<!-- End Frame -->
+function IntroView({ nav }) {
+    return (
+        <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+            <h2 className="text-2xl font-bold text-slate-800 mb-4">Welcome to the Semiosphere</h2>
+            <p className="text-slate-600 mb-6 leading-relaxed">
+                You are not just a "student." You are a <strong>Coherent Information System</strong>. 
+                In this course, we do not just study ethics; we analyze the <strong>Architecture of Agency</strong>.
+            </p>
+            <div className="bg-blue-50 p-6 rounded-xl border border-blue-100 mb-8">
+                <h3 className="font-semibold text-blue-900 mb-2">The Sapolsky Challenge</h3>
+                <p className="text-blue-800 text-sm">
+                    In a physical universe governed by entropy, "Free Will" is expensive. 
+                    Stress destroys your ability to process ethical signals. 
+                    This app helps you build the <strong>Meta-Constructor</strong> capacity to rewrite your own code.
+                </p>
+            </div>
+            <button onClick={() => nav('theory')} className="bg-slate-900 text-white px-6 py-3 rounded-lg font-medium hover:bg-slate-800 transition">
+                Start Sequence &rarr;
+            </button>
+        </div>
+    );
+}
 
-	<hr width="50%">
-		<!-- Navigation Bar (First,Previous,Next,Last) -->
-		<CENTER><font color=gray>First</font> | <font color=gray>Previous</font> | <a href=Page-002.html>Next</a> | <a href=Page-013.html>Last</a></CENTER>
+function TheoryView() {
+    return (
+        <div className="grid gap-6">
+            <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+                <h2 className="text-2xl font-bold text-slate-800 mb-4">The Physics of You</h2>
+                <p className="text-slate-600 mb-4">
+                    We use the <strong>Holographic Semiosphere</strong> framework to understand the self.
+                </p>
+                <div className="grid md:grid-cols-2 gap-6 mt-6">
+                    <div className="p-5 bg-slate-50 rounded-xl border border-slate-200">
+                        <div className="text-2xl mb-2">🧊 The CIB</div>
+                        <h3 className="font-bold text-slate-700">Coherent Information Blueprint</h3>
+                        <p className="text-sm text-slate-500 mt-2">
+                            The internal code. Just as a planarian worm has a bio-electric blueprint, you have an ethical blueprint (Identity Kernel). It organizes your energy against entropy.
+                        </p>
+                    </div>
+                    <div className="p-5 bg-slate-50 rounded-xl border border-slate-200">
+                        <div className="text-2xl mb-2">📺 The Holographic Screen</div>
+                        <h3 className="font-bold text-slate-700">The Markov Blanket</h3>
+                        <p className="text-sm text-slate-500 mt-2">
+                            The boundary where you meet the world. You don't see reality directly; you see a projection on your screen. Ethics is upgrading the resolution of this screen.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
 
-	<hr width="50%">
-	<center><font color="440088"><body face="Arial, Helvetica, sans-serif" class="style1"><body alink="440088" vlink="440088" link="440088"><a href="http://www.powerproduction.com/">StoryBoard Quick 6</a> </font><font face="Arial, Helvetica, sans-serif" class="style1"><span class="style2"> is Copyright &copy; 1993 - 2017</span></font><font color="440088" face="Arial, Helvetica, sans-serif" class="style1"> <a href="http://www.powerproduction.com/">PowerProduction Software</a></font></center>
-</BODY>
-</HTML>
+function NotationView() {
+    return (
+        <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+            <h2 className="text-2xl font-bold text-slate-800 mb-6">CIB-HS Notation</h2>
+            <p className="text-slate-600 mb-6">
+                We replace standard philosophical terms with "Systems Engineering" variables.
+            </p>
+            <div className="overflow-hidden rounded-xl border border-slate-200">
+                <table className="w-full text-left text-sm">
+                    <thead className="bg-slate-100 text-slate-700">
+                        <tr>
+                            <th className="p-4">Variable</th>
+                            <th className="p-4">Definition</th>
+                            <th className="p-4">Ethical Translation</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                        <tr>
+                            <td className="p-4 font-mono font-bold text-blue-600">IK</td>
+                            <td className="p-4">Identity Kernel ($c_0$)</td>
+                            <td className="p-4">Core Values / The Soul / Deep Character</td>
+                        </tr>
+                        <tr>
+                            <td className="p-4 font-mono font-bold text-purple-600">HS</td>
+                            <td className="p-4">Holographic Screen</td>
+                            <td className="p-4">Perception / What you notice / The "Gaze"</td>
+                        </tr>
+                        <tr>
+                            <td className="p-4 font-mono font-bold text-green-600">AH</td>
+                            <td className="p-4">Assembly History</td>
+                            <td className="p-4">Culture / Biography / Trauma / Context</td>
+                        </tr>
+                        <tr>
+                            <td className="p-4 font-mono font-bold text-orange-600">Cons</td>
+                            <td className="p-4">Constructors</td>
+                            <td className="p-4">Habits / Methods / Rituals / Arguments</td>
+                        </tr>
+                        <tr>
+                            <td className="p-4 font-mono font-bold text-red-600">Meta</td>
+                            <td className="p-4">Meta-Construction ($c_N$)</td>
+                            <td className="p-4">Learning / Forgiveness / Rewriting the Self</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
+}
+
+function ExemplarsView() {
+    const = useState('socrates');
+    const p = PHILOSOPHERS[selected];
+
+    return (
+        <div className="grid lg:grid-cols-3 gap-6">
+            {/* Sidebar List */}
+            <div className="space-y-2">
+                {Object.keys(PHILOSOPHERS).map(key => (
+                    <button
+                        key={key}
+                        onClick={() => setSelected(key)}
+                        className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
+                            selected === key? 'bg-slate-800 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-slate-50'
+                        }`}
+                    >
+                        {PHILOSOPHERS[key].image} {PHILOSOPHERS[key].name}
+                    </button>
+                ))}
+            </div>
+
+            {/* Detail Card */}
+            <div className="lg:col-span-2 bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+                <div className="flex items-center gap-4 mb-6">
+                    <span className="text-4xl">{p.image}</span>
+                    <div>
+                        <h2 className="text-2xl font-bold text-slate-800">{p.name}</h2>
+                        <span className="text-xs font-mono uppercase text-slate-400">{p.era}</span>
+                    </div>
+                </div>
+
+                <div className="space-y-6">
+                    {/* CIB Model Section */}
+                    <div className="bg-slate-50 p-6 rounded-xl border border-slate-100">
+                        <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">CIB Architecture</h3>
+                        <div className="grid gap-4 text-sm">
+                            <div><span className="font-mono font-bold text-blue-600">IK (Kernel):</span> {p.cibModel.IK}</div>
+                            <div><span className="font-mono font-bold text-purple-600">HS (Screen):</span> {p.cibModel.HS}</div>
+                            <div><span className="font-mono font-bold text-green-600">AH (History):</span> {p.cibModel.AH}</div>
+                            <div><span className="font-mono font-bold text-orange-600">Cons (Tools):</span> {p.cibModel.Cons}</div>
+                            <div><span className="font-mono font-bold text-red-600">Meta (Edit):</span> {p.cibModel.Meta}</div>
+                        </div>
+                    </div>
+
+                    {/* SAGE/Toulmin Section */}
+                    <div className="border-t border-slate-100 pt-6">
+                        <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">SAGE Analysis (Signal Detection)</h3>
+                        <div className="space-y-3">
+                            <div className="flex gap-3">
+                                <div className="bg-slate-200 text-slate-600 font-bold px-2 py-1 rounded text-xs h-fit">CLAIM</div>
+                                <p className="text-slate-800 italic">"{p.toulmin.claim}"</p>
+                            </div>
+                            <div className="flex gap-3">
+                                <div className="bg-purple-100 text-purple-600 font-bold px-2 py-1 rounded text-xs h-fit">GROUNDS</div>
+                                <p className="text-sm text-slate-600">From HS: {p.toulmin.grounds}</p>
+                            </div>
+                            <div className="flex gap-3">
+                                <div className="bg-blue-100 text-blue-600 font-bold px-2 py-1 rounded text-xs h-fit">WARRANT</div>
+                                <p className="text-sm text-slate-600">From IK: {p.toulmin.warrant}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function ModelingView({ userModel, setUserModel }) {
+    return (
+        <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+            <h2 className="text-2xl font-bold text-slate-800 mb-6">Meta-Construction Studio</h2>
+            <p className="text-slate-600 mb-6">
+                Model yourself. Define your own CIB variables to increase your Logical Depth.
+            </p>
+            <div className="space-y-4">
+                <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Your Name (Agent ID)</label>
+                    <input 
+                        type="text" 
+                        value={userModel.name}
+                        onChange={(e) => setUserModel({...userModel, name: e.target.value})}
+                        className="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                    />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-blue-700 mb-1">Identity Kernel (IK)</label>
+                    <p className="text-xs text-slate-500 mb-2">What are your non-negotiable core values? (The Root Code)</p>
+                    <textarea 
+                        value={userModel.ik}
+                        onChange={(e) => setUserModel({...userModel, ik: e.target.value})}
+                        className="w-full p-3 border border-blue-100 bg-blue-50 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none h-24"
+                    />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-purple-700 mb-1">Holographic Screen (HS)</label>
+                    <p className="text-xs text-slate-500 mb-2">What signals do you see that others miss? What is your professional 'gaze'?</p>
+                    <textarea 
+                        value={userModel.hs}
+                        onChange={(e) => setUserModel({...userModel, hs: e.target.value})}
+                        className="w-full p-3 border border-purple-100 bg-purple-50 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none h-24"
+                    />
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function CapstoneView({ userModel }) {
+    return (
+        <div className="bg-slate-900 text-white p-10 rounded-2xl shadow-2xl text-center">
+            <div className="text-6xl mb-4">🧬</div>
+            <h2 className="text-3xl font-bold mb-4">Agent Architecture Complete</h2>
+            <p className="text-slate-400 mb-8 max-w-lg mx-auto">
+                You have successfully modeled the CIB for Agent: <strong>{userModel.name |
+
+| "Unknown"}</strong>.
+                You are now a Meta-Constructor.
+            </p>
+            
+            <div className="grid gap-4 text-left max-w-lg mx-auto bg-white/10 p-6 rounded-xl backdrop-blur-sm">
+                <div>
+                    <span className="text-blue-300 text-xs font-mono uppercase">Identity Kernel</span>
+                    <p className="font-medium">{userModel.ik |
+
+| "Not defined"}</p>
+                </div>
+                <div className="border-t border-white/10 pt-4">
+                    <span className="text-purple-300 text-xs font-mono uppercase">Holographic Screen</span>
+                    <p className="font-medium">{userModel.hs |
+
+| "Not defined"}</p>
+                </div>
+            </div>
+
+            <button onClick={() => window.print()} className="mt-8 bg-white text-slate-900 px-8 py-3 rounded-full font-bold hover:bg-blue-50 transition">
+                Export Holographic Blueprint
+            </button>
+        </div>
+    );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+</script>
+</body>
+</html>
