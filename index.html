@@ -120,8 +120,11 @@ const PHILOSOPHERS = {
 
 // --- COMPONENTS ---
 
+const SECTIONS = ['Intro', 'Theory', 'Notation', 'Exemplars', 'Modeling', 'Capstone'];
+
 function App() {
-    const = useState('intro');
+    // FIX 1: Added variable names to useState
+    const [section, setSection] = useState('intro');
     const [userModel, setUserModel] = useState({ name: "", ik: "", hs: "" });
 
     const nav = (id) => setSection(id);
@@ -142,7 +145,8 @@ function App() {
                     
                     {/* Navigation Tabs */}
                     <div className="flex flex-wrap gap-2 mb-8 border-b border-slate-200 pb-4">
-                        {.map((item) => (
+                        {/* FIX 2: Added SECTIONS array map */}
+                        {SECTIONS.map((item) => (
                             <button 
                                 key={item} 
                                 onClick={() => nav(item.toLowerCase())}
@@ -255,7 +259,7 @@ function NotationView() {
                     <tbody className="divide-y divide-slate-100 bg-white">
                         <tr className="group hover:bg-blue-50 transition">
                             <td className="p-4 font-mono font-bold text-blue-600 text-lg">IK</td>
-                            <td className="p-4 font-medium">Identity Kernel ($c_0$)</td>
+                            <td className="p-4 font-medium">Identity Kernel (c<sub>0</sub>)</td>
                             <td className="p-4 text-slate-600">Core Values / The Soul / Deep Character</td>
                         </tr>
                         <tr className="group hover:bg-purple-50 transition">
@@ -286,7 +290,8 @@ function NotationView() {
 }
 
 function ExemplarsView() {
-    const = useState('socrates');
+    // FIX 3: Added variable names to useState
+    const [selected, setSelected] = useState('socrates');
     const p = PHILOSOPHERS[selected];
 
     return (
@@ -381,7 +386,7 @@ function ModelingView({ userModel, setUserModel }) {
                 <div className="grid md:grid-cols-2 gap-6">
                     <div>
                         <label className="block text-sm font-bold text-blue-700 mb-2">Identity Kernel (IK)</label>
-                        <p className="text-xs text-slate-500 mb-3">Your non-negotiable core values. The root code ($c_0$).</p>
+                        <p className="text-xs text-slate-500 mb-3">Your non-negotiable core values. The root code (c<sub>0</sub>).</p>
                         <textarea 
                             value={userModel.ik}
                             onChange={(e) => setUserModel({...userModel, ik: e.target.value})}
@@ -415,24 +420,19 @@ function CapstoneView({ userModel }) {
                 <div className="text-7xl mb-6 animate-pulse">🧬</div>
                 <h2 className="text-3xl font-bold mb-4">Architecture Complete</h2>
                 <p className="text-slate-400 mb-10 max-w-lg mx-auto">
-                    You have successfully modeled the CIB for Agent: <strong>{userModel.name |
-
-| "Unknown"}</strong>.
+                    {/* FIX 4: Fixed Logical OR syntax */}
+                    You have successfully modeled the CIB for Agent: <strong>{userModel.name || "Unknown"}</strong>.
                     You are now operating as a Meta-Constructor.
                 </p>
                 
                 <div className="grid md:grid-cols-2 gap-6 text-left max-w-2xl mx-auto mb-10">
                     <div className="bg-white/10 p-6 rounded-xl backdrop-blur-md border border-white/10">
                         <span className="text-blue-400 text-xs font-mono font-bold uppercase tracking-wider mb-2 block">Identity Kernel</span>
-                        <p className="font-medium text-lg">{userModel.ik |
-
-| "Not defined"}</p>
+                        <p className="font-medium text-lg">{userModel.ik || "Not defined"}</p>
                     </div>
                     <div className="bg-white/10 p-6 rounded-xl backdrop-blur-md border border-white/10">
                         <span className="text-purple-400 text-xs font-mono font-bold uppercase tracking-wider mb-2 block">Holographic Screen</span>
-                        <p className="font-medium text-lg">{userModel.hs |
-
-| "Not defined"}</p>
+                        <p className="font-medium text-lg">{userModel.hs || "Not defined"}</p>
                     </div>
                 </div>
 
