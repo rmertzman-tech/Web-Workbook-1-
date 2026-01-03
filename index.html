@@ -1,451 +1,525 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Module 3: The Holographic Philosopher Studio</title>
-<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<script src="https://cdn.tailwindcss.com"></script>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-body { font-family: 'Inter', sans-serif; }
-.gradient-bg { background: linear-gradient(135deg, #0f172a 0%, #334155 100%); }
-.fade-in { animation: fadeIn 0.5s ease-in; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-.holo-card {
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.5);
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Architecture of Agency: A Unified Field Theory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #f3f4f6; /* Slate 100 for a clean base, sections will have colors */
+            color: #1f2937;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e5e7eb;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4c1d95;
+            border-radius: 4px;
+        }
+        
+        /* Chart Container Utilities */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* max-w-2xl equiv */
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        
+        /* Card Hover Effects */
+        .interactive-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .interactive-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Step Connector for Vertical Timeline */
+        .step-line {
+            position: absolute;
+            left: 24px;
+            top: 40px;
+            bottom: -20px;
+            width: 4px;
+            background-color: #e5e7eb;
+            z-index: 0;
+        }
+        .step-item:last-child .step-line {
+            display: none;
+        }
+
+        /* Vibrant Palette Classes */
+        .bg-vibrant-purple { background-color: #4c1d95; }
+        .text-vibrant-purple { color: #4c1d95; }
+        .bg-vibrant-cyan { background-color: #06b6d4; }
+        .text-vibrant-cyan { color: #06b6d4; }
+        .bg-vibrant-pink { background-color: #db2777; }
+        .text-vibrant-pink { color: #db2777; }
+        .bg-vibrant-yellow { background-color: #f59e0b; }
+        .text-vibrant-yellow { color: #f59e0b; }
+    </style>
 </head>
-<body class="bg-slate-50 text-slate-800">
-<div id="root"></div>
+<body class="antialiased">
 
-<script type="text/babel">
-const { useState, useEffect } = React;
-
-// --- DATA STRUCTURES: CIB / HOLOGRAPHIC FRAMEWORK ---
-
-const PHILOSOPHERS = {
-    socrates: {
-        name: "Socrates",
-        era: "Ancient Greece",
-        image: "🏛️",
-        cibModel: {
-            IK: "Virtue is Knowledge; The unexamined life is entropy (not worth living).",
-            HS: "Detects logical contradictions in social 'noise'; sees ignorance where others see certainty.",
-            AH: "Athenian democracy; Oral tradition; Sophist debates.",
-            Cons: "Elenchus (The Dialectic Method) - a recursive error-correction algorithm.",
-            Meta: "Irony & Aporia - inducing a 'crash' in the interlocutor's CIB to force a reboot."
-        },
-        toulmin: {
-            claim: "We must prioritize the care of the soul over the body.",
-            grounds: "Observed contradictions in the pursuit of wealth/power (Data on Holographic Screen).",
-            warrant: "The soul is the seat of the Identity Kernel; if the Kernel is corrupt, the system fails (Logic of IK)."
-        }
-    },
-    aristotle: {
-        name: "Aristotle",
-        era: "Ancient Greece",
-        image: "📖",
-        cibModel: {
-            IK: "Teleology (Function); Eudaimonia (Flourishing) via Habituation.",
-            HS: "Sees 'Natural Kinds' and biological hierarchies; filters world through functional purpose.",
-            AH: "Macedonian court; Biology studies; The Lyceum.",
-            Cons: "Syllogism; Classification; Habit (Hexis) as thermodynamic efficiency.",
-            Meta: "Limited. Rigid hierarchy prevents seeing women/slaves as full agents."
-        },
-        toulmin: {
-            claim: "Virtue is a mean between extremes.",
-            grounds: "Observation of successful natural systems (Data on Holographic Screen).",
-            warrant: "Nature abhors excess; the 'Good' is the efficient functioning of the form (Logic of IK)."
-        }
-    },
-    maathai: {
-        name: "Wangari Maathai",
-        era: "Contemporary",
-        image: "🌳",
-        cibModel: {
-            IK: "Ecological & Social Justice are one CIB; The tree is a symbol of agency.",
-            HS: "Sees causal link: Deforestation -> Soil Erosion -> Poverty -> Political Weakness.",
-            AH: "Colonial Kenya; Biological training; Kikuyu tradition.",
-            Cons: "Tree Planting - a 'Keystone Constructor' that repairs both soil and social fabric.",
-            Meta: "Motu - 'empowerment'. Rewriting the self-image of rural women from 'victim' to 'forester'."
-        },
-        toulmin: {
-            claim: "We must plant trees to restore democracy.",
-            grounds: "Environmental degradation leads to resource scarcity and conflict (Data on Holographic Screen).",
-            warrant: "A distinct 'Self' requires a viable 'Substrate'; protecting the land protects the Identity Kernel (Logic of IK)."
-        }
-    },
-    mandela: {
-        name: "Nelson Mandela",
-        era: "Contemporary",
-        image: "🕊️",
-        cibModel: {
-            IK: "Ubuntu ('I am because we are'); Reconciliation over Revenge.",
-            HS: "Sees the oppressor as a prisoner of their own hatred (Signal), not just a monster (Noise).",
-            AH: "Xhosa royalty; Apartheid prison (27 years); Legal training.",
-            Cons: "Truth & Reconciliation Commission (TRC) - a 'Civic Loop' to process trauma.",
-            Meta: "Forgiveness - A radical rewriting of the 'Enemy Script' to prevent thermal runaway (civil war)."
-        },
-        toulmin: {
-            claim: "Freedom is indivisible; the chains on any one of my people were the chains on all of them.",
-            grounds: "Systemic observation of the effects of domination (Data on Holographic Screen).",
-            warrant: "Identity is distributed (Ubuntu); damage to the network is damage to the node (Logic of IK)."
-        }
-    },
-    boisjoly: {
-        name: "Roger Boisjoly",
-        era: "Modern Engineering",
-        image: "🚀",
-        cibModel: {
-            IK: "Engineering Ethics; Fidelity to Data over Hierarchy.",
-            HS: "Sees O-ring erosion data as a 'Fatal Signal'; Managers see it as 'Acceptable Risk'.",
-            AH: "Morton Thiokol; Engineering training; Previous flight data.",
-            Cons: "The Memo - an attempt to inject signal into a deaf system.",
-            Meta: "Whistleblowing - breaking the 'Dark Coherence' of the organization to save truth."
-        },
-        toulmin: {
-            claim: "The launch must be stopped.",
-            grounds: "Temperature readings are below safety thresholds (Data on Holographic Screen).",
-            warrant: "Physics does not negotiate with management schedules (Logic of IK)."
-        }
-    }
-};
-
-// --- COMPONENTS ---
-
-const SECTIONS = ['Intro', 'Theory', 'Notation', 'Exemplars', 'Modeling', 'Capstone'];
-
-function App() {
-    // FIX 1: Added variable names to useState
-    const [section, setSection] = useState('intro');
-    const [userModel, setUserModel] = useState({ name: "", ik: "", hs: "" });
-
-    const nav = (id) => setSection(id);
-
-    return (
-        <div className="min-h-screen flex flex-col font-sans bg-slate-50">
-            {/* Header */}
-            <header className="gradient-bg text-white p-6 shadow-lg">
-                <div className="max-w-5xl mx-auto">
-                    <h1 className="text-3xl font-bold tracking-tight">The Holographic Philosopher Studio</h1>
-                    <p className="text-blue-200 mt-2">CIB Architecture & Meta-Construction Workbook</p>
+    <!-- Navigation (Sticky) -->
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-700 to-pink-600">
+                        Agential Semiosphere
+                    </span>
                 </div>
-            </header>
-
-            {/* Main Content */}
-            <main className="flex-grow p-6">
-                <div className="max-w-5xl mx-auto">
-                    
-                    {/* Navigation Tabs */}
-                    <div className="flex flex-wrap gap-2 mb-8 border-b border-slate-200 pb-4">
-                        {/* FIX 2: Added SECTIONS array map */}
-                        {SECTIONS.map((item) => (
-                            <button 
-                                key={item} 
-                                onClick={() => nav(item.toLowerCase())}
-                                className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
-                                    section === item.toLowerCase() 
-                                   ? 'bg-slate-800 text-white shadow-md' 
-                                    : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
-                                }`}
-                            >
-                                {item}
-                            </button>
-                        ))}
-                    </div>
-
-                    {/* Section Views */}
-                    <div className="fade-in">
-                        {section === 'intro' && <IntroView nav={nav} />}
-                        {section === 'theory' && <TheoryView />}
-                        {section === 'notation' && <NotationView />}
-                        {section === 'exemplars' && <ExemplarsView />}
-                        {section === 'modeling' && <ModelingView userModel={userModel} setUserModel={setUserModel} />}
-                        {section === 'capstone' && <CapstoneView userModel={userModel} />}
-                    </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#intro" class="text-gray-600 hover:text-purple-700 font-medium transition-colors">Convergence</a>
+                    <a href="#framework" class="text-gray-600 hover:text-purple-700 font-medium transition-colors">The 3 Pillars</a>
+                    <a href="#semiosphere" class="text-gray-600 hover:text-purple-700 font-medium transition-colors">Semiosis</a>
+                    <a href="#cib" class="text-gray-600 hover:text-purple-700 font-medium transition-colors">Life Detection (CIB)</a>
+                    <a href="#thermodynamics" class="text-gray-600 hover:text-purple-700 font-medium transition-colors">Thermodynamics</a>
                 </div>
-            </main>
-            
-            <footer className="text-center p-6 text-slate-400 text-sm">
-                Powered by CIB-HS Framework | Bio-Cognitive Ethics Module
-            </footer>
+            </div>
         </div>
-    );
-}
+    </nav>
 
-function IntroView({ nav }) {
-    return (
-        <div className="holo-card p-8 rounded-2xl">
-            <h2 className="text-3xl font-bold text-slate-800 mb-6">Welcome to the Semiosphere</h2>
-            <div className="prose prose-slate max-w-none">
-                <p className="text-lg leading-relaxed mb-6">
-                    You are not just a "student." You are a <strong>Coherent Information System</strong>. 
-                    In this course, we do not just study ethics; we analyze the <strong>Architecture of Agency</strong>.
+    <!-- Hero Section -->
+    <section id="intro" class="relative bg-vibrant-purple text-white overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <!-- decorative background pattern using CSS gradients -->
+            <div class="absolute inset-0" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 30px 30px;"></div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 py-24 sm:px-6 lg:px-8 relative z-10 text-center">
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
+                The Architecture of <span class="text-vibrant-cyan">Agency</span>
+            </h1>
+            <p class="mt-4 text-xl md:text-2xl max-w-3xl mx-auto text-purple-100 font-light">
+                A Unified Field Theory connecting <span class="font-bold text-vibrant-yellow">Thermodynamics</span>, <span class="font-bold text-vibrant-pink">Biosemiotics</span>, and the <span class="font-bold text-vibrant-cyan">Geometry of Physics</span>.
+            </p>
+            <div class="mt-10">
+                <p class="text-lg text-purple-200 mb-8">
+                    We are moving from a "ghost in the machine" dualism to a rigorous physics of meaning. Discover how the "Coherent Information Bit" (CIB) and "Top-Down Causation" define life itself.
                 </p>
-                
-                <div className="bg-blue-50 p-6 rounded-xl border-l-4 border-blue-500 mb-8">
-                    <h3 className="font-bold text-blue-900 text-xl mb-2">The Sapolsky Challenge</h3>
-                    <p className="text-blue-800">
-                        In a physical universe governed by entropy, "Free Will" is expensive. 
-                        Robert Sapolsky has shown that stress destroys your ability to process ethical signals. 
-                        This app helps you build the <strong>Meta-Constructor</strong> capacity to rewrite your own code.
+                <a href="#framework" class="inline-block bg-vibrant-yellow text-purple-900 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-yellow-400 transition-colors">
+                    Explore the Framework
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- The 3 Pillars Framework -->
+    <section id="framework" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-gray-900 sm:text-4xl">The Unified Triad</h2>
+                <p class="mt-4 text-lg text-gray-500 max-w-2xl mx-auto">
+                    The report synthesizes three disparate fields to explain the "observer." Click or hover over the cards below to understand the connection.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Pillar 1 -->
+                <div class="interactive-card bg-gray-50 rounded-xl p-8 border-t-4 border-vibrant-cyan shadow-sm relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 text-6xl font-bold text-vibrant-cyan">1</div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Geometry & Topology</h3>
+                    <p class="text-sm font-bold text-vibrant-cyan uppercase tracking-wide mb-4">The Container</p>
+                    <p class="text-gray-600 mb-4">
+                        Based on <strong>Invariant Set Theory (IST)</strong>. Reality is a fractal, non-Archimedean geometric structure.
                     </p>
+                    <div class="bg-white p-4 rounded-lg shadow-inner text-sm text-gray-500">
+                        <strong>Key Insight:</strong> The "Agential Manifold" is the map of all valid states an organism can occupy.
+                    </div>
                 </div>
 
-                <button onClick={() => nav('theory')} className="bg-slate-900 text-white px-8 py-3 rounded-lg font-medium hover:bg-slate-800 transition shadow-lg flex items-center gap-2">
-                    Begin Sequence <span className="text-xl">→</span>
-                </button>
+                <!-- Pillar 2 -->
+                <div class="interactive-card bg-gray-50 rounded-xl p-8 border-t-4 border-vibrant-pink shadow-sm relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 text-6xl font-bold text-vibrant-pink">2</div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Biosemiotics</h3>
+                    <p class="text-sm font-bold text-vibrant-pink uppercase tracking-wide mb-4">The Translator</p>
+                    <p class="text-gray-600 mb-4">
+                        <strong>Thomas Sebeok's Modeling Systems.</strong> How physical signals are converted into meaningful signs.
+                    </p>
+                    <div class="bg-white p-4 rounded-lg shadow-inner text-sm text-gray-500">
+                        <strong>Key Insight:</strong> Life is not just chemistry; it is the interpretation of signs (Semiosis).
+                    </div>
+                </div>
+
+                <!-- Pillar 3 -->
+                <div class="interactive-card bg-gray-50 rounded-xl p-8 border-t-4 border-vibrant-yellow shadow-sm relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 text-6xl font-bold text-vibrant-yellow">3</div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Thermodynamics</h3>
+                    <p class="text-sm font-bold text-vibrant-yellow uppercase tracking-wide mb-4">The Cost</p>
+                    <p class="text-gray-600 mb-4">
+                        <strong>Non-Equilibrium Physics.</strong> Maintaining agency requires a constant battle against entropy.
+                    </p>
+                    <div class="bg-white p-4 rounded-lg shadow-inner text-sm text-gray-500">
+                        <strong>Key Insight:</strong> "Goodness" and "Meaning" are high-energy states. Stress degrades them.
+                    </div>
+                </div>
             </div>
         </div>
-    );
-}
+    </section>
 
-function TheoryView() {
-    return (
-        <div className="grid gap-6">
-            <div className="holo-card p-8 rounded-2xl">
-                <h2 className="text-2xl font-bold text-slate-800 mb-2">The Physics of You</h2>
-                <p className="text-slate-600 mb-8">
-                    We use the <strong>Holographic Semiosphere</strong> framework to understand the self.
-                </p>
+    <!-- Semiosphere Section (Chart + Process) -->
+    <section id="semiosphere" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 
-                <div className="grid md:grid-cols-2 gap-6">
-                    <div className="p-6 bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
-                        <div className="text-4xl mb-4">🧊</div>
-                        <h3 className="font-bold text-slate-800 text-lg">The CIB</h3>
-                        <p className="text-sm font-semibold text-blue-600 mb-2 uppercase tracking-wide">Coherent Information Blueprint</p>
-                        <p className="text-slate-600 leading-relaxed">
-                            The internal code. Just as a planarian worm has a bio-electric blueprint, you have an ethical blueprint (Identity Kernel). It organizes your energy against entropy.
-                        </p>
-                    </div>
-                    
-                    <div className="p-6 bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
-                        <div className="text-4xl mb-4">📺</div>
-                        <h3 className="font-bold text-slate-800 text-lg">The Holographic Screen</h3>
-                        <p className="text-sm font-semibold text-purple-600 mb-2 uppercase tracking-wide">The Markov Blanket</p>
-                        <p className="text-slate-600 leading-relaxed">
-                            The boundary where you meet the world. You don't see reality directly; you see a projection on your screen. Ethics is upgrading the resolution of this screen.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-}
-
-function NotationView() {
-    return (
-        <div className="holo-card p-8 rounded-2xl">
-            <h2 className="text-2xl font-bold text-slate-800 mb-6">CIB-HS Notation</h2>
-            <p className="text-slate-600 mb-6">
-                We replace standard philosophical terms with "Systems Engineering" variables.
-            </p>
-            <div className="overflow-hidden rounded-xl border border-slate-200 shadow-sm">
-                <table className="w-full text-left text-sm">
-                    <thead className="bg-slate-100 text-slate-700">
-                        <tr>
-                            <th className="p-4 font-semibold">Variable</th>
-                            <th className="p-4 font-semibold">Definition</th>
-                            <th className="p-4 font-semibold">Ethical Translation</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100 bg-white">
-                        <tr className="group hover:bg-blue-50 transition">
-                            <td className="p-4 font-mono font-bold text-blue-600 text-lg">IK</td>
-                            <td className="p-4 font-medium">Identity Kernel (c<sub>0</sub>)</td>
-                            <td className="p-4 text-slate-600">Core Values / The Soul / Deep Character</td>
-                        </tr>
-                        <tr className="group hover:bg-purple-50 transition">
-                            <td className="p-4 font-mono font-bold text-purple-600 text-lg">HS</td>
-                            <td className="p-4 font-medium">Holographic Screen</td>
-                            <td className="p-4 text-slate-600">Perception / What you notice / The "Gaze"</td>
-                        </tr>
-                        <tr className="group hover:bg-green-50 transition">
-                            <td className="p-4 font-mono font-bold text-green-600 text-lg">AH</td>
-                            <td className="p-4 font-medium">Assembly History</td>
-                            <td className="p-4 text-slate-600">Culture / Biography / Trauma / Context</td>
-                        </tr>
-                        <tr className="group hover:bg-orange-50 transition">
-                            <td className="p-4 font-mono font-bold text-orange-600 text-lg">Cons</td>
-                            <td className="p-4 font-medium">Constructors</td>
-                            <td className="p-4 text-slate-600">Habits / Methods / Rituals / Arguments</td>
-                        </tr>
-                        <tr className="group hover:bg-red-50 transition">
-                            <td className="p-4 font-mono font-bold text-red-600 text-lg">Meta</td>
-                            <td className="p-4 font-medium">Meta-Construction</td>
-                            <td className="p-4 text-slate-600">Learning / Forgiveness / Rewriting the Self</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    );
-}
-
-function ExemplarsView() {
-    // FIX 3: Added variable names to useState
-    const [selected, setSelected] = useState('socrates');
-    const p = PHILOSOPHERS[selected];
-
-    return (
-        <div className="grid lg:grid-cols-3 gap-6">
-            {/* Sidebar List */}
-            <div className="space-y-2">
-                {Object.keys(PHILOSOPHERS).map(key => (
-                    <button
-                        key={key}
-                        onClick={() => setSelected(key)}
-                        className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center gap-3 ${
-                            selected === key
-                           ? 'bg-slate-800 text-white shadow-md transform scale-105' 
-                            : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
-                        }`}
-                    >
-                        <span className="text-2xl">{PHILOSOPHERS[key].image}</span>
-                        <span className="font-medium">{PHILOSOPHERS[key].name}</span>
-                    </button>
-                ))}
-            </div>
-
-            {/* Detail Card */}
-            <div className="lg:col-span-2 holo-card p-8 rounded-2xl">
-                <div className="flex items-center gap-4 mb-6 pb-6 border-b border-slate-100">
-                    <span className="text-5xl">{p.image}</span>
-                    <div>
-                        <h2 className="text-3xl font-bold text-slate-800">{p.name}</h2>
-                        <span className="inline-block bg-slate-100 text-slate-500 text-xs px-2 py-1 rounded mt-1 font-mono uppercase tracking-wider">{p.era}</span>
-                    </div>
-                </div>
-
-                <div className="space-y-6">
-                    {/* CIB Model Section */}
-                    <div className="bg-slate-50 p-6 rounded-xl border border-slate-200">
-                        <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">CIB Architecture</h3>
-                        <div className="space-y-3 text-sm">
-                            <div className="flex gap-3"><span className="font-mono font-bold text-blue-600 min-w-[3rem]">IK:</span> <span className="text-slate-700">{p.cibModel.IK}</span></div>
-                            <div className="flex gap-3"><span className="font-mono font-bold text-purple-600 min-w-[3rem]">HS:</span> <span className="text-slate-700">{p.cibModel.HS}</span></div>
-                            <div className="flex gap-3"><span className="font-mono font-bold text-green-600 min-w-[3rem]">AH:</span> <span className="text-slate-700">{p.cibModel.AH}</span></div>
-                            <div className="flex gap-3"><span className="font-mono font-bold text-orange-600 min-w-[3rem]">Cons:</span> <span className="text-slate-700">{p.cibModel.Cons}</span></div>
-                            <div className="flex gap-3"><span className="font-mono font-bold text-red-600 min-w-[3rem]">Meta:</span> <span className="text-slate-700">{p.cibModel.Meta}</span></div>
-                        </div>
-                    </div>
-
-                    {/* SAGE/Toulmin Section */}
-                    <div className="pt-2">
-                        <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">SAGE Analysis (Signal Detection)</h3>
-                        <div className="space-y-4">
-                            <div className="bg-white border-l-4 border-slate-400 p-4 shadow-sm">
-                                <div className="text-xs font-bold text-slate-400 mb-1">CLAIM</div>
-                                <p className="text-slate-800 font-medium italic">"{p.toulmin.claim}"</p>
-                            </div>
-                            <div className="grid md:grid-cols-2 gap-4">
-                                <div className="bg-white border-l-4 border-purple-400 p-4 shadow-sm">
-                                    <div className="text-xs font-bold text-purple-400 mb-1">GROUNDS (from HS)</div>
-                                    <p className="text-sm text-slate-600">{p.toulmin.grounds}</p>
-                                </div>
-                                <div className="bg-white border-l-4 border-blue-400 p-4 shadow-sm">
-                                    <div className="text-xs font-bold text-blue-400 mb-1">WARRANT (from IK)</div>
-                                    <p className="text-sm text-slate-600">{p.toulmin.warrant}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-}
-
-function ModelingView({ userModel, setUserModel }) {
-    return (
-        <div className="holo-card p-8 rounded-2xl">
-            <h2 className="text-2xl font-bold text-slate-800 mb-6">Meta-Construction Studio</h2>
-            <p className="text-slate-600 mb-8 max-w-2xl">
-                To be a Meta-Constructor, you must define your own variables. This increases your <strong>Logical Depth</strong>, allowing you to withstand entropy.
-            </p>
-            
-            <div className="space-y-6 max-w-3xl">
+                <!-- Chart Column -->
                 <div>
-                    <label className="block text-sm font-bold text-slate-700 mb-2">Agent ID (Name)</label>
-                    <input 
-                        type="text" 
-                        value={userModel.name}
-                        onChange={(e) => setUserModel({...userModel, name: e.target.value})}
-                        className="w-full p-4 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition shadow-sm"
-                        placeholder="e.g., Student 2024"
-                    />
-                </div>
-                
-                <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                        <label className="block text-sm font-bold text-blue-700 mb-2">Identity Kernel (IK)</label>
-                        <p className="text-xs text-slate-500 mb-3">Your non-negotiable core values. The root code (c<sub>0</sub>).</p>
-                        <textarea 
-                            value={userModel.ik}
-                            onChange={(e) => setUserModel({...userModel, ik: e.target.value})}
-                            className="w-full p-4 border border-blue-100 bg-blue-50/50 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none h-40 resize-none transition"
-                            placeholder="What do you stand for even when stressed?"
-                        />
-                    </div>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-6">The Nested Semiosphere</h2>
+                    <p class="text-gray-600 mb-8 text-lg">
+                        The "Agential Semiosphere" is not a flat plane but a nested hierarchy of meaning-making systems. Just as the biosphere contains ecosystems, the Semiosphere contains "Umwelts" (subjective worlds).
+                    </p>
                     
-                    <div>
-                        <label className="block text-sm font-bold text-purple-700 mb-2">Holographic Screen (HS)</label>
-                        <p className="text-xs text-slate-500 mb-3">Your professional gaze. What signals do you see?</p>
-                        <textarea 
-                            value={userModel.hs}
-                            onChange={(e) => setUserModel({...userModel, hs: e.target.value})}
-                            className="w-full p-4 border border-purple-100 bg-purple-50/50 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none h-40 resize-none transition"
-                            placeholder="What do you notice that others miss?"
-                        />
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <h4 class="text-lg font-bold text-gray-800 mb-4 text-center">Composition of the Agential Reality</h4>
+                        <!-- Chart Container -->
+                        <div class="chart-container">
+                            <canvas id="semiosphereChart"></canvas>
+                        </div>
+                        <p class="text-xs text-center text-gray-500 mt-4">
+                            *The "Umwelt" is the biological core, wrapped in the "Sociosphere" (Culture), all contained within the universal "Semiosphere".
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Process/Ladder Column -->
+                <div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-8">The Ladder of Interpretation</h3>
+                    <p class="text-gray-600 mb-8">
+                        How does a raw physical impact become a complex thought? Sebeok's "Modeling Systems" explain the ascent from matter to mind.
+                    </p>
+
+                    <div class="relative pl-4">
+                        <!-- Step 1 -->
+                        <div class="step-item relative pl-12 pb-12">
+                            <div class="step-line"></div>
+                            <div class="absolute left-0 top-0 w-12 h-12 rounded-full bg-vibrant-cyan text-white flex items-center justify-center font-bold text-xl shadow-lg z-10">1</div>
+                            <h4 class="text-xl font-bold text-gray-900">Alpha-Mode (Signal)</h4>
+                            <p class="text-sm font-semibold text-vibrant-cyan mb-2">Primary Modeling System</p>
+                            <p class="text-gray-600">
+                                <strong>Raw Physics.</strong> The organism detects a photon or a chemical gradient. It is a "read-only" state. No interpretation, just reaction.
+                            </p>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="step-item relative pl-12 pb-12">
+                            <div class="step-line"></div>
+                            <div class="absolute left-0 top-0 w-12 h-12 rounded-full bg-vibrant-pink text-white flex items-center justify-center font-bold text-xl shadow-lg z-10">2</div>
+                            <h4 class="text-xl font-bold text-gray-900">Beta-Mode (Index/Icon)</h4>
+                            <p class="text-sm font-semibold text-vibrant-pink mb-2">Secondary Modeling System</p>
+                            <p class="text-gray-600">
+                                <strong>Pattern Recognition.</strong> The signal becomes a "Sign". The footprint implies a predator. The "Umwelt" is born here.
+                            </p>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="step-item relative pl-12">
+                            <div class="absolute left-0 top-0 w-12 h-12 rounded-full bg-vibrant-purple text-white flex items-center justify-center font-bold text-xl shadow-lg z-10">3</div>
+                            <h4 class="text-xl font-bold text-gray-900">Tertiary Mode (Symbol)</h4>
+                            <p class="text-sm font-semibold text-vibrant-purple mb-2">Tertiary Modeling System</p>
+                            <p class="text-gray-600">
+                                <strong>Abstract Formalism.</strong> Language, Mathematics, Code. We detach from the immediate physical world to create "Virtual Models" (Simulations), which we then impose back onto reality (Downward Causation).
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    );
-}
+    </section>
 
-function CapstoneView({ userModel }) {
-    return (
-        <div className="bg-slate-900 text-white p-12 rounded-3xl shadow-2xl text-center relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
-            
-            <div className="relative z-10">
-                <div className="text-7xl mb-6 animate-pulse">🧬</div>
-                <h2 className="text-3xl font-bold mb-4">Architecture Complete</h2>
-                <p className="text-slate-400 mb-10 max-w-lg mx-auto">
-                    {/* FIX 4: Fixed Logical OR syntax */}
-                    You have successfully modeled the CIB for Agent: <strong>{userModel.name || "Unknown"}</strong>.
-                    You are now operating as a Meta-Constructor.
+    <!-- Agnostic Life Detection (CIB) Section -->
+    <section id="cib" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 sm:text-4xl">Agnostic Life Detection</h2>
+                <p class="mt-4 text-lg text-gray-500 max-w-2xl mx-auto">
+                    How do we find life if it doesn't look like us? We look for the "Coherent Information Bit" (CIB).
                 </p>
-                
-                <div className="grid md:grid-cols-2 gap-6 text-left max-w-2xl mx-auto mb-10">
-                    <div className="bg-white/10 p-6 rounded-xl backdrop-blur-md border border-white/10">
-                        <span className="text-blue-400 text-xs font-mono font-bold uppercase tracking-wider mb-2 block">Identity Kernel</span>
-                        <p className="font-medium text-lg">{userModel.ik || "Not defined"}</p>
-                    </div>
-                    <div className="bg-white/10 p-6 rounded-xl backdrop-blur-md border border-white/10">
-                        <span className="text-purple-400 text-xs font-mono font-bold uppercase tracking-wider mb-2 block">Holographic Screen</span>
-                        <p className="font-medium text-lg">{userModel.hs || "Not defined"}</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <!-- Data Viz: Assembly Index -->
+                <div class="bg-gray-50 rounded-xl p-6 shadow-sm border border-gray-100">
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">The Molecular Assembly Index (MAI)</h3>
+                    <p class="text-sm text-gray-500 mb-6">
+                        Assembly Theory (Cronin/Walker) states that molecules with high complexity cannot form by chance. There is a statistical "wall" at ~15 steps.
+                    </p>
+                    <div class="chart-container">
+                        <canvas id="cibChart"></canvas>
                     </div>
                 </div>
 
-                <button onClick={() => window.print()} className="bg-white text-slate-900 px-8 py-3 rounded-full font-bold hover:bg-blue-50 transition shadow-lg transform hover:-translate-y-1">
-                    Export Holographic Blueprint
-                </button>
+                <!-- Concept: The Ladder of Detection -->
+                <div class="flex flex-col justify-center space-y-6">
+                    <div class="bg-vibrant-purple text-white p-6 rounded-lg shadow-lg">
+                        <h4 class="text-xl font-bold mb-2">1. The "N=1" Problem</h4>
+                        <p class="opacity-90">Historically, we only looked for "Terran" life (Water, DNA). This limited us.</p>
+                    </div>
+                    <div class="bg-vibrant-pink text-white p-6 rounded-lg shadow-lg transform translate-x-4">
+                        <h4 class="text-xl font-bold mb-2">2. Agnostic Biosignatures</h4>
+                        <p class="opacity-90">We now look for "Complexity" and "Disequilibrium". Life is a system that encodes information into matter.</p>
+                    </div>
+                    <div class="bg-vibrant-cyan text-white p-6 rounded-lg shadow-lg transform translate-x-8">
+                        <h4 class="text-xl font-bold mb-2">3. The CIB Metric</h4>
+                        <p class="opacity-90">The <strong>Coherent Information Bit</strong> is the unit of agency. It quantifies the "Blueprint" required to assemble the molecule.</p>
+                    </div>
+                </div>
             </div>
         </div>
-    );
-}
+    </section>
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<App />);
-</script>
+    <!-- Thermodynamics & Sapolsky Limit -->
+    <section id="thermodynamics" class="py-20 bg-gray-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                
+                <!-- Left Text -->
+                <div class="lg:col-span-1">
+                    <h2 class="text-3xl font-bold text-vibrant-yellow mb-6">The Thermodynamics of Good & Evil</h2>
+                    <p class="text-gray-300 mb-6 leading-relaxed">
+                        Agency is expensive. High-level moral reasoning and "Logical Depth" require massive metabolic energy.
+                    </p>
+                    <div class="bg-gray-800 p-6 rounded-lg border-l-4 border-vibrant-pink">
+                        <h4 class="text-lg font-bold text-white mb-2">The Sapolsky Limit</h4>
+                        <p class="text-sm text-gray-400">
+                            Behavioral biologist Robert Sapolsky has shown that under high stress (Entropy), the brain's frontal cortex shuts down. We regress from "Tertiary Mode" (Ethics/Logic) to "Alpha Mode" (Reaction/Survival).
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Right Chart -->
+                <div class="lg:col-span-2">
+                    <div class="bg-gray-800 rounded-xl p-6 shadow-xl">
+                        <h4 class="text-lg font-bold text-white mb-4">Entropy vs. Agential Capacity</h4>
+                        <div class="chart-container">
+                            <canvas id="entropyChart"></canvas>
+                        </div>
+                        <p class="text-xs text-center text-gray-400 mt-4">
+                            *As Environmental Entropy (Stress/Chaos) increases, the capacity for Agency (Choice/Morality) plummets.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- The Solution: Exo-Constructors -->
+            <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                <div class="p-4">
+                    <div class="w-16 h-16 bg-vibrant-cyan rounded-full flex items-center justify-center text-3xl mx-auto mb-4">🏛️</div>
+                    <h3 class="text-xl font-bold mb-2">Exo-Constructors</h3>
+                    <p class="text-gray-400 text-sm">We build institutions (Laws, Culture, Religion) to offload the cognitive cost of being "Good".</p>
+                </div>
+                <div class="p-4">
+                    <div class="w-16 h-16 bg-vibrant-yellow rounded-full flex items-center justify-center text-3xl mx-auto mb-4">🧠</div>
+                    <h3 class="text-xl font-bold mb-2">Neuronal Recycling</h3>
+                    <p class="text-gray-400 text-sm">We "recycle" our primate brains to process high-level symbols (Reading, Math) through cultural training.</p>
+                </div>
+                <div class="p-4">
+                    <div class="w-16 h-16 bg-vibrant-pink rounded-full flex items-center justify-center text-3xl mx-auto mb-4">⚖️</div>
+                    <h3 class="text-xl font-bold mb-2">Moral Commonwealth</h3>
+                    <p class="text-gray-400 text-sm">The goal: Create a low-entropy society where the "energy cost" of moral behavior is affordable.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-50 border-t border-gray-200 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-gray-500 text-sm">
+                Generated based on the analysis of: "Architecture of Agnostic Life Detection", "Agential Semiosphere", "Thermodynamics of Agency", and "Bio-Semiotic and Geometric Architecture".
+            </p>
+            <p class="text-gray-400 text-xs mt-2">
+                &copy; 2025 Agential Semiosphere Synthesis Project.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Chart.js Logic -->
+    <script>
+        // --- Shared Configurations ---
+        Chart.defaults.font.family = "'Space Grotesk', sans-serif";
+        Chart.defaults.color = '#4b5563';
+
+        // --- Label Wrapping Helper ---
+        function wrapLabel(label) {
+            if (label.length > 16) {
+                const words = label.split(' ');
+                const lines = [];
+                let currentLine = words[0];
+
+                for (let i = 1; i < words.length; i++) {
+                    if (currentLine.length + 1 + words[i].length <= 16) {
+                        currentLine += ' ' + words[i];
+                    } else {
+                        lines.push(currentLine);
+                        currentLine = words[i];
+                    }
+                }
+                lines.push(currentLine);
+                return lines;
+            }
+            return label;
+        }
+
+        // --- Tooltip Callback (Mandatory) ---
+        const tooltipCallback = {
+            title: function(tooltipItems) {
+                const item = tooltipItems[0];
+                let label = item.chart.data.labels[item.dataIndex];
+                if (Array.isArray(label)) {
+                    return label.join(' ');
+                } else {
+                    return label;
+                }
+            }
+        };
+
+        // --- Chart 1: Semiosphere Nested Donut ---
+        const ctxSemio = document.getElementById('semiosphereChart').getContext('2d');
+        new Chart(ctxSemio, {
+            type: 'doughnut',
+            data: {
+                labels: ['Umwelt (Biological Core)', 'Sociosphere (Cultural Layer)', 'Semiosphere (Universal Context)'],
+                datasets: [{
+                    data: [40, 35, 25],
+                    backgroundColor: [
+                        '#db2777', // Pink (Core)
+                        '#06b6d4', // Cyan (Middle)
+                        '#4c1d95'  // Purple (Outer)
+                    ],
+                    borderWidth: 0,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '65%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { padding: 20, usePointStyle: true }
+                    },
+                    tooltip: {
+                        callbacks: tooltipCallback,
+                        backgroundColor: 'rgba(17, 24, 39, 0.9)',
+                        padding: 12
+                    }
+                }
+            }
+        });
+
+        // --- Chart 2: CIB Assembly Index (Bar) ---
+        const ctxCIB = document.getElementById('cibChart').getContext('2d');
+        const cibLabels = ['Simple Molecules', 'Amino Acids', 'Complex Lipids', 'The CIB Threshold', 'Technosignatures'];
+        const processedCibLabels = cibLabels.map(wrapLabel);
+
+        new Chart(ctxCIB, {
+            type: 'bar',
+            data: {
+                labels: processedCibLabels,
+                datasets: [{
+                    label: 'Molecular Assembly Index (Steps)',
+                    data: [2, 5, 12, 16, 25],
+                    backgroundColor: (ctx) => {
+                        const val = ctx.raw;
+                        // Color change at threshold > 15
+                        return val > 15 ? '#06b6d4' : '#e5e7eb';
+                    },
+                    borderRadius: 6,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { borderDash: [5, 5] },
+                        title: { display: true, text: 'Complexity Steps' }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: tooltipCallback
+                    },
+                    annotation: {
+                        // Note: Requires annotation plugin, but strictly using core Chart.js here.
+                        // We simulate the threshold line visually in the data structure logic or via separate plugin if loaded.
+                        // Since external plugins aren't guaranteed, we rely on color coding (Grey vs Cyan).
+                    }
+                }
+            }
+        });
+
+        // --- Chart 3: Entropy vs Agency (Line/Scatter) ---
+        const ctxEntropy = document.getElementById('entropyChart').getContext('2d');
+        new Chart(ctxEntropy, {
+            type: 'line',
+            data: {
+                labels: ['Low Stress', 'Moderate Stress', 'High Stress', 'Survival Mode'],
+                datasets: [
+                    {
+                        label: 'Agential Capacity (Logic/Ethics)',
+                        data: [95, 75, 30, 5],
+                        borderColor: '#f59e0b', // Yellow
+                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'Primate Reaction (Instinct)',
+                        data: [20, 40, 85, 98],
+                        borderColor: '#db2777', // Pink
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        tension: 0.4,
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                        ticks: { color: '#9ca3af' },
+                        title: { display: true, text: 'Functional Capacity %', color: '#9ca3af' }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#9ca3af' }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: { color: '#d1d5db' }
+                    },
+                    tooltip: {
+                        callbacks: tooltipCallback,
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)'
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html>
