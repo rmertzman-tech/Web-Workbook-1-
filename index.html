@@ -10,10 +10,10 @@
     <style>
         body {
             font-family: 'Space Grotesk', sans-serif;
-            background-color: #f3f4f6; /* Slate 100 for a clean base, sections will have colors */
+            background-color: #f3f4f6;
             color: #1f2937;
         }
-        /* Custom Scrollbar */
+        
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -25,27 +25,42 @@
             border-radius: 4px;
         }
         
-        /* Chart Container Utilities */
         .chart-container {
             position: relative;
             width: 100%;
-            max-width: 600px; /* max-w-2xl equiv */
+            max-width: 600px;
             margin-left: auto;
             margin-right: auto;
             height: 350px;
             max-height: 400px;
         }
         
-        /* Card Hover Effects */
         .interactive-card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            position: relative;
         }
         .interactive-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
         }
+        
+        .interactive-card::after {
+            content: 'Click to learn more →';
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            font-size: 0.75rem;
+            color: #9ca3af;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .interactive-card:hover::after {
+            opacity: 1;
+        }
 
-        /* Step Connector for Vertical Timeline */
         .step-line {
             position: absolute;
             left: 24px;
@@ -58,8 +73,25 @@
         .step-item:last-child .step-line {
             display: none;
         }
+        
+        .learning-step {
+            position: relative;
+            padding-left: 80px;
+            margin-bottom: 40px;
+        }
+        .learning-step::before {
+            content: '';
+            position: absolute;
+            left: 32px;
+            top: 72px;
+            bottom: -40px;
+            width: 2px;
+            background: linear-gradient(to bottom, #4c1d95, #06b6d4);
+        }
+        .learning-step:last-child::before {
+            display: none;
+        }
 
-        /* Vibrant Palette Classes */
         .bg-vibrant-purple { background-color: #4c1d95; }
         .text-vibrant-purple { color: #4c1d95; }
         .bg-vibrant-cyan { background-color: #06b6d4; }
@@ -68,11 +100,141 @@
         .text-vibrant-pink { color: #db2777; }
         .bg-vibrant-yellow { background-color: #f59e0b; }
         .text-vibrant-yellow { color: #f59e0b; }
+        
+        #pillarModal {
+            animation: fadeIn 0.2s ease-in-out;
+        }
+        
+        #pillarModal > div {
+            animation: slideUp 0.3s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0,0,0,0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: linear-gradient(to right, #48bb78, #f59e0b, #f56565);
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #4c1d95;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #4c1d95;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            border: none;
+        }
+        
+        /* CIB Convergence Animation */
+        .cib-converge {
+            position: relative;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .pillar-arrow {
+            position: absolute;
+            width: 60px;
+            height: 4px;
+            border-radius: 2px;
+            transition: all 0.5s ease;
+        }
+        
+        .arrow-cyan {
+            background: linear-gradient(90deg, transparent, #06b6d4);
+            top: 40%;
+            left: 10%;
+            transform: rotate(-30deg);
+        }
+        
+        .arrow-pink {
+            background: linear-gradient(90deg, transparent, #db2777);
+            top: 50%;
+            left: 10%;
+        }
+        
+        .arrow-yellow {
+            background: linear-gradient(90deg, transparent, #f59e0b);
+            top: 60%;
+            left: 10%;
+            transform: rotate(30deg);
+        }
+        
+        .cib-node {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4c1d95, #7c3aed);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2em;
+            box-shadow: 0 8px 16px rgba(76, 29, 149, 0.3);
+            z-index: 10;
+        }
+        
+        /* Assembly Index visualization */
+        .assembly-bar {
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
     </style>
 </head>
 <body class="antialiased">
 
-    <!-- Navigation (Sticky) -->
+    <!-- Navigation -->
     <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
@@ -81,12 +243,12 @@
                         Agential Semiosphere
                     </span>
                 </div>
-                <div class="hidden md:flex space-x-8">
-                    <a href="#intro" class="text-gray-600 hover:text-purple-700 font-medium transition-colors">Convergence</a>
-                    <a href="#framework" class="text-gray-600 hover:text-purple-700 font-medium transition-colors">The 3 Pillars</a>
-                    <a href="#semiosphere" class="text-gray-600 hover:text-purple-700 font-medium transition-colors">Semiosis</a>
-                    <a href="#cib" class="text-gray-600 hover:text-purple-700 font-medium transition-colors">Life Detection (CIB)</a>
-                    <a href="#thermodynamics" class="text-gray-600 hover:text-purple-700 font-medium transition-colors">Thermodynamics</a>
+                <div class="hidden md:flex space-x-6">
+                    <a href="#intro" class="text-gray-600 hover:text-purple-700 font-medium transition-colors">Start</a>
+                    <a href="#framework" class="text-gray-600 hover:text-purple-700 font-medium transition-colors">3 Pillars</a>
+                    <a href="#cib" class="text-gray-600 hover:text-purple-700 font-medium transition-colors">CIB</a>
+                    <a href="#synthesis" class="text-gray-600 hover:text-purple-700 font-medium transition-colors">Synthesis</a>
+                    <a href="#life-detection" class="text-gray-600 hover:text-purple-700 font-medium transition-colors">Life Detection</a>
                 </div>
             </div>
         </div>
@@ -95,7 +257,6 @@
     <!-- Hero Section -->
     <section id="intro" class="relative bg-vibrant-purple text-white overflow-hidden">
         <div class="absolute inset-0 opacity-10">
-            <!-- decorative background pattern using CSS gradients -->
             <div class="absolute inset-0" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 30px 30px;"></div>
         </div>
         <div class="max-w-7xl mx-auto px-4 py-24 sm:px-6 lg:px-8 relative z-10 text-center">
@@ -109,26 +270,75 @@
                 <p class="text-lg text-purple-200 mb-8">
                     We are moving from a "ghost in the machine" dualism to a rigorous physics of meaning. Discover how the "Coherent Information Bit" (CIB) and "Top-Down Causation" define life itself.
                 </p>
-                <a href="#framework" class="inline-block bg-vibrant-yellow text-purple-900 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-yellow-400 transition-colors">
-                    Explore the Framework
+                <a href="#learning-path" class="inline-block bg-vibrant-yellow text-purple-900 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-yellow-400 transition-colors">
+                    Start Your Learning Journey
                 </a>
             </div>
         </div>
     </section>
 
+    <!-- Learning Path Section -->
+    <section id="learning-path" class="py-20 bg-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center mb-4">Your Learning Journey</h2>
+            <p class="text-center text-gray-600 mb-12">Follow these steps to master the unified theory of agency</p>
+            
+            <div class="space-y-0">
+                <div class="learning-step">
+                    <div class="absolute left-0 w-16 h-16 rounded-full bg-purple-600 text-white flex items-center justify-center text-2xl font-bold shadow-lg">1</div>
+                    <div class="bg-purple-50 rounded-lg p-6 border-l-4 border-purple-600">
+                        <h3 class="font-bold text-xl mb-2">Understand the Problem</h3>
+                        <p class="text-gray-700 mb-3">Why do we need a unified theory of agency? What gap are we filling?</p>
+                        <a href="#framework" class="text-purple-700 font-semibold hover:text-purple-900">Begin here →</a>
+                    </div>
+                </div>
+                
+                <div class="learning-step">
+                    <div class="absolute left-0 w-16 h-16 rounded-full bg-cyan-600 text-white flex items-center justify-center text-2xl font-bold shadow-lg">2</div>
+                    <div class="bg-cyan-50 rounded-lg p-6 border-l-4 border-cyan-600">
+                        <h3 class="font-bold text-xl mb-2">Learn the Three Pillars</h3>
+                        <p class="text-gray-700 mb-3">Click each pillar card below to explore Geometry, Biosemiotics, and Thermodynamics in depth.</p>
+                        <a href="#framework" class="text-cyan-700 font-semibold hover:text-cyan-900">Explore pillars →</a>
+                    </div>
+                </div>
+                
+                <div class="learning-step">
+                    <div class="absolute left-0 w-16 h-16 rounded-full bg-pink-600 text-white flex items-center justify-center text-2xl font-bold shadow-lg">3</div>
+                    <div class="bg-pink-50 rounded-lg p-6 border-l-4 border-pink-600">
+                        <h3 class="font-bold text-xl mb-2">Discover the CIB</h3>
+                        <p class="text-gray-700 mb-3">See how the three pillars converge into your Coherent Information Blueprint—your identity.</p>
+                        <a href="#cib" class="text-pink-700 font-semibold hover:text-pink-900">Discover CIB →</a>
+                    </div>
+                </div>
+                
+                <div class="learning-step">
+                    <div class="absolute left-0 w-16 h-16 rounded-full bg-yellow-600 text-white flex items-center justify-center text-2xl font-bold shadow-lg">4</div>
+                    <div class="bg-yellow-50 rounded-lg p-6 border-l-4 border-yellow-600">
+                        <h3 class="font-bold text-xl mb-2">Test Your Understanding</h3>
+                        <p class="text-gray-700 mb-3">Complete self-assessment checkpoints throughout to verify your comprehension.</p>
+                        <span class="text-yellow-700 font-semibold">✓ Built into each section</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- The 3 Pillars Framework -->
-    <section id="framework" class="py-20 bg-white">
+    <section id="framework" class="py-20 bg-white border-t border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
                 <h2 class="text-3xl font-bold text-gray-900 sm:text-4xl">The Unified Triad</h2>
                 <p class="mt-4 text-lg text-gray-500 max-w-2xl mx-auto">
-                    The report synthesizes three disparate fields to explain the "observer." Click or hover over the cards below to understand the connection.
+                    The report synthesizes three disparate fields to explain the "observer." Click the cards below to explore each pillar in depth.
                 </p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Pillar 1 -->
-                <div class="interactive-card bg-gray-50 rounded-xl p-8 border-t-4 border-vibrant-cyan shadow-sm relative overflow-hidden group">
+                <div class="interactive-card bg-gray-50 rounded-xl p-8 border-t-4 border-vibrant-cyan shadow-sm relative overflow-hidden group" 
+                     data-pillar="0" 
+                     role="button" 
+                     tabindex="0"
+                     aria-label="Open Geometry and Topology pillar details">
                     <div class="absolute top-0 right-0 p-4 opacity-10 text-6xl font-bold text-vibrant-cyan">1</div>
                     <h3 class="text-2xl font-bold text-gray-900 mb-4">Geometry & Topology</h3>
                     <p class="text-sm font-bold text-vibrant-cyan uppercase tracking-wide mb-4">The Container</p>
@@ -140,8 +350,11 @@
                     </div>
                 </div>
 
-                <!-- Pillar 2 -->
-                <div class="interactive-card bg-gray-50 rounded-xl p-8 border-t-4 border-vibrant-pink shadow-sm relative overflow-hidden group">
+                <div class="interactive-card bg-gray-50 rounded-xl p-8 border-t-4 border-vibrant-pink shadow-sm relative overflow-hidden group" 
+                     data-pillar="1"
+                     role="button" 
+                     tabindex="0"
+                     aria-label="Open Biosemiotics pillar details">
                     <div class="absolute top-0 right-0 p-4 opacity-10 text-6xl font-bold text-vibrant-pink">2</div>
                     <h3 class="text-2xl font-bold text-gray-900 mb-4">Biosemiotics</h3>
                     <p class="text-sm font-bold text-vibrant-pink uppercase tracking-wide mb-4">The Translator</p>
@@ -153,8 +366,11 @@
                     </div>
                 </div>
 
-                <!-- Pillar 3 -->
-                <div class="interactive-card bg-gray-50 rounded-xl p-8 border-t-4 border-vibrant-yellow shadow-sm relative overflow-hidden group">
+                <div class="interactive-card bg-gray-50 rounded-xl p-8 border-t-4 border-vibrant-yellow shadow-sm relative overflow-hidden group" 
+                     data-pillar="2"
+                     role="button" 
+                     tabindex="0"
+                     aria-label="Open Thermodynamics pillar details">
                     <div class="absolute top-0 right-0 p-4 opacity-10 text-6xl font-bold text-vibrant-yellow">3</div>
                     <h3 class="text-2xl font-bold text-gray-900 mb-4">Thermodynamics</h3>
                     <p class="text-sm font-bold text-vibrant-yellow uppercase tracking-wide mb-4">The Cost</p>
@@ -169,12 +385,507 @@
         </div>
     </section>
 
-    <!-- Semiosphere Section (Chart + Process) -->
+    <!-- Checkpoint 1 -->
+    <section class="py-12 bg-blue-50">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-xl p-8 shadow-md border-l-4 border-blue-500">
+                <h3 class="text-2xl font-bold text-blue-900 mb-4">🔍 Check Your Understanding: The Three Pillars</h3>
+                <p class="text-gray-700 mb-6">Before continuing, make sure you understand the basic framework.</p>
+                
+                <div class="space-y-6">
+                    <div class="question">
+                        <p class="font-semibold mb-3">Q1: In your own words, what is the "Agential Manifold"?</p>
+                        <textarea id="q1-pillars" 
+                                  class="w-full p-4 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none" 
+                                  rows="3" 
+                                  placeholder="Type your answer here..."
+                                  aria-label="Answer for question 1"></textarea>
+                    </div>
+                    
+                    <div class="question">
+                        <p class="font-semibold mb-3">Q2: What is the fundamental difference between "reaction" (like a thermostat) and "interpretation" (like a bacterium)?</p>
+                        <div class="space-y-2">
+                            <label class="flex items-start p-3 border-2 border-gray-200 rounded hover:bg-gray-50 cursor-pointer">
+                                <input type="radio" name="q2-pillars" value="a" class="mt-1 mr-3">
+                                <span>Reaction is faster than interpretation</span>
+                            </label>
+                            <label class="flex items-start p-3 border-2 border-gray-200 rounded hover:bg-gray-50 cursor-pointer">
+                                <input type="radio" name="q2-pillars" value="b" class="mt-1 mr-3">
+                                <span>Interpretation creates meaning from signals, reaction just responds causally</span>
+                            </label>
+                            <label class="flex items-start p-3 border-2 border-gray-200 rounded hover:bg-gray-50 cursor-pointer">
+                                <input type="radio" name="q2-pillars" value="c" class="mt-1 mr-3">
+                                <span>There is no fundamental difference</span>
+                            </label>
+                        </div>
+                        <button onclick="checkAnswer('q2-pillars', 'b')" 
+                                class="mt-3 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                            Check Answer
+                        </button>
+                        <div id="q2-pillars-result" class="mt-3" role="alert" aria-live="polite"></div>
+                    </div>
+                    
+                    <div class="question">
+                        <p class="font-semibold mb-3">Q3: What happens to high-level reasoning when entropy exceeds metabolic capacity?</p>
+                        <div class="space-y-2">
+                            <label class="flex items-start p-3 border-2 border-gray-200 rounded hover:bg-gray-50 cursor-pointer">
+                                <input type="radio" name="q3-pillars" value="a" class="mt-1 mr-3">
+                                <span>It accelerates to compensate</span>
+                            </label>
+                            <label class="flex items-start p-3 border-2 border-gray-200 rounded hover:bg-gray-50 cursor-pointer">
+                                <input type="radio" name="q3-pillars" value="b" class="mt-1 mr-3">
+                                <span>It collapses - we revert to survival mode</span>
+                            </label>
+                            <label class="flex items-start p-3 border-2 border-gray-200 rounded hover:bg-gray-50 cursor-pointer">
+                                <input type="radio" name="q3-pillars" value="c" class="mt-1 mr-3">
+                                <span>It remains unchanged</span>
+                            </label>
+                        </div>
+                        <button onclick="checkAnswer('q3-pillars', 'b')" 
+                                class="mt-3 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                            Check Answer
+                        </button>
+                        <div id="q3-pillars-result" class="mt-3" role="alert" aria-live="polite"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW: CIB Section -->
+    <section id="cib" class="py-20 bg-gradient-to-br from-purple-50 via-white to-cyan-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Hero Introduction -->
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">The CIB: Where the Three Pillars Converge</h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto mb-8">
+                    Your identity is not arbitrary. It's a precise specification built from geometry, semiosis, and thermodynamics—a <strong>Coherent Information Blueprint</strong>.
+                </p>
+                
+                <!-- Visual Convergence -->
+                <div class="cib-converge max-w-2xl mx-auto mb-8">
+                    <div class="pillar-arrow arrow-cyan"></div>
+                    <div class="pillar-arrow arrow-pink"></div>
+                    <div class="pillar-arrow arrow-yellow"></div>
+                    <div class="cib-node">CIB</div>
+                </div>
+                
+                <div class="bg-white rounded-xl p-8 max-w-3xl mx-auto shadow-lg border-2 border-purple-200">
+                    <h3 class="text-2xl font-bold text-purple-900 mb-4">What is a CIB?</h3>
+                    <p class="text-gray-700 text-lg leading-relaxed">
+                        A <strong>Coherent Information Bit (CIB)</strong> is the fundamental unit of organized information that defines an agent's identity and capabilities. It's not a literal data bit—it's a <em>thermodynamic operator</em>, a discrete packet of causal/instructional information that harnesses physical resources into coherent, self-perpetuating patterns.
+                    </p>
+                    <p class="text-gray-700 text-lg leading-relaxed mt-4">
+                        Multiple CIBs arrange <strong>hierarchically</strong> to form your complete <strong>Identity Kernel</strong>—the blueprint of who you are.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Interactive CIB Assessment Tool -->
+            <div class="bg-white rounded-xl p-8 shadow-xl border-t-4 border-purple-600 mb-12">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">🔧 Assess Your CIB Right Now</h3>
+                <p class="text-center text-gray-600 mb-8">
+                    Adjust the sliders to reflect your current state. Watch how your CIB coherence changes.
+                </p>
+                
+                <!-- Three Sliders -->
+                <div class="space-y-6 max-w-2xl mx-auto mb-8">
+                    <div class="slider-container">
+                        <label class="block text-sm font-semibold mb-2 text-cyan-700">
+                            Geometry: How constrained is your state space?
+                        </label>
+                        <p class="text-xs text-gray-500 mb-2">Physical constraints, structural limits, environmental factors</p>
+                        <input type="range" 
+                               min="0" 
+                               max="100" 
+                               value="70" 
+                               id="geometrySlider"
+                               aria-label="Geometry constraint level"
+                               class="w-full">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>Highly constrained</span>
+                            <span id="geometryValue" class="font-bold text-cyan-700">70%</span>
+                            <span>Free to explore</span>
+                        </div>
+                    </div>
+                    
+                    <div class="slider-container">
+                        <label class="block text-sm font-semibold mb-2 text-pink-700">
+                            Semiosis: How rich is your meaning-making?
+                        </label>
+                        <p class="text-xs text-gray-500 mb-2">Interpretive capacity, perspective-taking, complexity of understanding</p>
+                        <input type="range" 
+                               min="0" 
+                               max="100" 
+                               value="65" 
+                               id="semiosisSlider"
+                               aria-label="Semiosis capacity level"
+                               class="w-full">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>Rigid/simple</span>
+                            <span id="semiosisValue" class="font-bold text-pink-700">65%</span>
+                            <span>Rich/nuanced</span>
+                        </div>
+                    </div>
+                    
+                    <div class="slider-container">
+                        <label class="block text-sm font-semibold mb-2 text-yellow-700">
+                            Thermodynamics: What's your energy budget?
+                        </label>
+                        <p class="text-xs text-gray-500 mb-2">Metabolic resources, stress level, available energy for complex thought</p>
+                        <input type="range" 
+                               min="0" 
+                               max="100" 
+                               value="50" 
+                               id="thermodynamicsSlider"
+                               aria-label="Thermodynamic energy level"
+                               class="w-full">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>Depleted/stressed</span>
+                            <span id="thermodynamicsValue" class="font-bold text-yellow-700">50%</span>
+                            <span>Abundant/rested</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- CIB Output -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-gradient-to-br from-purple-100 to-purple-50 rounded-lg p-6 border-2 border-purple-300">
+                        <h4 class="text-sm font-bold text-purple-900 mb-2">CIB Coherence</h4>
+                        <div class="text-4xl font-bold text-purple-700 mb-2" id="cibCoherence">62%</div>
+                        <div id="coherenceBar" class="h-3 bg-purple-200 rounded-full overflow-hidden">
+                            <div id="coherenceFill" class="h-full bg-purple-600 transition-all duration-300" style="width: 62%"></div>
+                        </div>
+                        <p class="text-xs text-purple-700 mt-2" id="coherenceLabel">Moderate</p>
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-cyan-100 to-cyan-50 rounded-lg p-6 border-2 border-cyan-300">
+                        <h4 class="text-sm font-bold text-cyan-900 mb-2">Logical Depth</h4>
+                        <div class="text-3xl font-bold text-cyan-700 mb-2" id="logicalDepth">Medium</div>
+                        <p class="text-xs text-cyan-700" id="depthDescription">Moderate identity complexity</p>
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-pink-100 to-pink-50 rounded-lg p-6 border-2 border-pink-300">
+                        <h4 class="text-sm font-bold text-pink-900 mb-2">Identity Stability</h4>
+                        <div class="text-3xl font-bold text-pink-700 mb-2" id="identityStability">Fragile</div>
+                        <p class="text-xs text-pink-700" id="stabilityWarning">⚠️ Weakest link: Thermodynamics</p>
+                    </div>
+                </div>
+                
+                <!-- Self-Reflection Prompts -->
+                <div id="reflectionPrompts" class="bg-yellow-50 border-l-4 border-yellow-500 p-6 rounded-r-lg">
+                    <h4 class="font-bold text-yellow-900 mb-3">💭 Self-Reflection Prompt</h4>
+                    <p id="promptText" class="text-gray-700"></p>
+                </div>
+            </div>
+
+            <!-- Course Framework Connection Table -->
+            <div class="bg-white rounded-xl p-8 shadow-lg mb-12">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">🔗 How CIB Connects to Course Concepts</h3>
+                <p class="text-center text-gray-600 mb-8">Everything you'll learn this semester relates back to the CIB framework</p>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse">
+                        <thead>
+                            <tr class="bg-purple-100">
+                                <th class="border border-purple-300 p-4 text-left font-bold text-purple-900">Course Concept</th>
+                                <th class="border border-purple-300 p-4 text-left font-bold text-purple-900">How It Relates to CIB</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="hover:bg-gray-50">
+                                <td class="border border-gray-300 p-4 font-semibold">PRF (Phenomenological Reference Framework)</td>
+                                <td class="border border-gray-300 p-4">The <strong>semiotic layer</strong> of your CIB—your interpretive lens on reality</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="border border-gray-300 p-4 font-semibold">ATCF (Adaptive Temporal Consistency)</td>
+                                <td class="border border-gray-300 p-4">Measures the <strong>temporal coherence</strong> of your PRF/CIB over time (past/present/future/freedom)</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="border border-gray-300 p-4 font-semibold">Agential Manifold</td>
+                                <td class="border border-gray-300 p-4">The <strong>geometric layer</strong> of your CIB—the state space of what you can possibly be</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="border border-gray-300 p-4 font-semibold">Metabolic Budget</td>
+                                <td class="border border-gray-300 p-4">The <strong>thermodynamic constraint</strong> on your CIB—whether you can afford to be yourself</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="border border-gray-300 p-4 font-semibold">SAGE (Systematic Analysis)</td>
+                                <td class="border border-gray-300 p-4">Tool for analyzing <strong>CIB health</strong> across different domains of your life</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="border border-gray-300 p-4 font-semibold">Sapolsky Limit</td>
+                                <td class="border border-gray-300 p-4">The point where thermodynamic collapse <strong>destroys CIB integrity</strong></td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="border border-gray-300 p-4 font-semibold">Virtue (Class 14)</td>
+                                <td class="border border-gray-300 p-4">Myelinated habits that protect your CIB under stress (automatic CIB maintenance)</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="border border-gray-300 p-4 font-semibold">Social Contract (Class 15)</td>
+                                <td class="border border-gray-300 p-4">Societies have collective CIBs (Hobbes/Locke/Rousseau = different CIB architectures)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- CIB Across Scales -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">📏 CIB Operates at Every Scale</h3>
+                <p class="text-center text-gray-600 mb-8">The same framework applies from individuals to societies</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white rounded-xl p-6 shadow-lg border-t-4 border-cyan-500 cursor-pointer hover:shadow-xl transition-shadow"
+                         onclick="toggleScale('individual')">
+                        <div class="text-4xl mb-4 text-center">👤</div>
+                        <h4 class="text-xl font-bold text-center text-cyan-700 mb-3">Individual CIB</h4>
+                        <p class="text-sm text-gray-600 text-center mb-4">A single organism's identity</p>
+                        <div id="scale-individual" class="hidden text-sm text-gray-700 space-y-2">
+                            <p><strong>Example:</strong> Your personal values, habits, worldview</p>
+                            <p><strong>Maintained by:</strong> Your brain's metabolic budget + sensory umwelt + physical constraints</p>
+                            <p><strong>When it fails:</strong> Burnout, identity crisis, moral injury</p>
+                        </div>
+                        <button class="mt-3 text-cyan-600 text-sm font-semibold w-full text-center">
+                            <span id="toggle-individual">Click to expand ↓</span>
+                        </button>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl p-6 shadow-lg border-t-4 border-pink-500 cursor-pointer hover:shadow-xl transition-shadow"
+                         onclick="toggleScale('organizational')">
+                        <div class="text-4xl mb-4 text-center">🏥</div>
+                        <h4 class="text-xl font-bold text-center text-pink-700 mb-3">Organizational CIB</h4>
+                        <p class="text-sm text-gray-600 text-center mb-4">A company/institution's identity</p>
+                        <div id="scale-organizational" class="hidden text-sm text-gray-700 space-y-2">
+                            <p><strong>Example:</strong> A hospital's mission, culture, operational procedures</p>
+                            <p><strong>Maintained by:</strong> Budget + shared values/culture + regulatory/physical constraints</p>
+                            <p><strong>When it fails:</strong> "Caring" institution becomes extractive warehouse</p>
+                        </div>
+                        <button class="mt-3 text-pink-600 text-sm font-semibold w-full text-center">
+                            <span id="toggle-organizational">Click to expand ↓</span>
+                        </button>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl p-6 shadow-lg border-t-4 border-yellow-500 cursor-pointer hover:shadow-xl transition-shadow"
+                         onclick="toggleScale('cultural')">
+                        <div class="text-4xl mb-4 text-center">🏛️</div>
+                        <h4 class="text-xl font-bold text-center text-yellow-700 mb-3">Cultural CIB</h4>
+                        <p class="text-sm text-gray-600 text-center mb-4">A society's identity</p>
+                        <div id="scale-cultural" class="hidden text-sm text-gray-700 space-y-2">
+                            <p><strong>Example:</strong> Democracy, rule of law, shared narratives</p>
+                            <p><strong>Maintained by:</strong> GDP + cultural institutions + geographic/historical constraints</p>
+                            <p><strong>When it fails:</strong> Totalitarianism or societal collapse</p>
+                        </div>
+                        <button class="mt-3 text-yellow-600 text-sm font-semibold w-full text-center">
+                            <span id="toggle-cultural">Click to expand ↓</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Meta-Constructor Capability -->
+            <div class="bg-gradient-to-r from-purple-900 to-indigo-900 text-white rounded-xl p-8 shadow-xl">
+                <h3 class="text-2xl font-bold mb-4">🔄 Meta-Construction: Can You Rewrite Your Own CIB?</h3>
+                <p class="text-purple-100 mb-6 text-lg">
+                    Advanced agents have a remarkable capacity: they can <strong>modify and rebuild their own CIB architectures</strong>—essentially editing their own source code.
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white/10 backdrop-blur rounded-lg p-6">
+                        <h4 class="font-bold text-yellow-300 mb-3">✓ How Humans Meta-Construct</h4>
+                        <ul class="space-y-2 text-purple-100">
+                            <li>• <strong>Learning:</strong> Acquiring new CIBs (skills, perspectives)</li>
+                            <li>• <strong>Therapy:</strong> Loosening rigid beliefs to allow rewrites</li>
+                            <li>• <strong>Conversion experiences:</strong> Major identity reorganization</li>
+                            <li>• <strong>Reflection:</strong> Consciously examining and adjusting values</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-white/10 backdrop-blur rounded-lg p-6">
+                        <h4 class="font-bold text-red-300 mb-3">⚠️ The Danger: Dark Coherence</h4>
+                        <p class="text-purple-100 text-sm mb-3">
+                            When an agent achieves stable order by <strong>drastically simplifying</strong> its internal model instead of bearing the cost of complexity.
+                        </p>
+                        <p class="text-purple-100 text-sm">
+                            <strong>Example:</strong> Rigid dogmatism, totalitarian ideology, extreme denial—brittle stability that resists necessary change.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="mt-6 bg-yellow-500/20 border-2 border-yellow-400 rounded-lg p-4">
+                    <p class="text-yellow-100">
+                        <strong>Key Insight:</strong> Profound personal growth requires careful balance—you must expend energy to rewrite your identity while preserving enough coherence to remain functional during the transition.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Synthesis Section (UPDATED with CIB) -->
+    <section id="synthesis" class="py-20 bg-gradient-to-br from-purple-50 to-cyan-50 border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center mb-4">The Three Pillars in Action</h2>
+            <p class="text-center text-gray-600 mb-12">Watch how Geometry, Semiosis, Thermodynamics, and CIB interact in a real biological system</p>
+            
+            <div class="bg-white rounded-xl p-8 shadow-lg">
+                <h3 class="text-2xl font-bold mb-6 text-center">Case Study: A Bacterium Under Stress</h3>
+                <p class="text-gray-700 mb-8 text-center max-w-3xl mx-auto">
+                    Adjust the stress slider below to see how environmental entropy affects all three pillars AND the CIB simultaneously.
+                </p>
+                
+                <!-- Stress Level Slider -->
+                <div class="mb-10 max-w-2xl mx-auto">
+                    <label class="block text-lg font-semibold mb-4 text-center">Environmental Stress Level</label>
+                    <div class="flex items-center space-x-4">
+                        <span class="text-sm text-green-600 font-medium">Low</span>
+                        <input type="range" 
+                               min="0" 
+                               max="100" 
+                               value="0" 
+                               id="stressSlider"
+                               aria-label="Environmental stress level"
+                               class="flex-1">
+                        <span class="text-sm text-red-600 font-medium">High</span>
+                    </div>
+                    <div class="text-center mt-2">
+                        <span class="text-2xl font-bold text-purple-700" id="stressValue">0%</span>
+                        <span class="text-gray-600"> Stress</span>
+                    </div>
+                </div>
+                
+                <!-- Four Columns (Three Pillars + CIB) -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                    <div class="bg-cyan-50 rounded-lg p-5 border-l-4 border-cyan-500">
+                        <h4 class="font-bold text-sm text-cyan-700 mb-3 flex items-center">
+                            <span class="w-6 h-6 bg-cyan-500 rounded-full flex items-center justify-center text-white text-xs mr-2">1</span>
+                            Geometry
+                        </h4>
+                        <div class="space-y-2 text-xs">
+                            <div>
+                                <span class="font-semibold">Manifold:</span>
+                                <div class="font-mono bg-white p-2 rounded mt-1" id="manifoldState">Normal</div>
+                            </div>
+                            <div>
+                                <span class="font-semibold">State Space:</span>
+                                <div class="font-mono bg-white p-2 rounded mt-1" id="stateSpace">100%</div>
+                            </div>
+                            <div>
+                                <span class="font-semibold">Markov Blanket:</span>
+                                <div class="font-mono bg-white p-2 rounded mt-1" id="markovState">Intact</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-pink-50 rounded-lg p-5 border-l-4 border-pink-500">
+                        <h4 class="font-bold text-sm text-pink-700 mb-3 flex items-center">
+                            <span class="w-6 h-6 bg-pink-500 rounded-full flex items-center justify-center text-white text-xs mr-2">2</span>
+                            Semiosis
+                        </h4>
+                        <div class="space-y-2 text-xs">
+                            <div>
+                                <span class="font-semibold">Modeling:</span>
+                                <div class="font-mono bg-white p-2 rounded mt-1" id="modelingSystem">Beta Mode</div>
+                            </div>
+                            <div>
+                                <span class="font-semibold">Interpretation:</span>
+                                <div class="font-mono bg-white p-2 rounded mt-1" id="signInterpretation">Active</div>
+                            </div>
+                            <div>
+                                <span class="font-semibold">Umwelt:</span>
+                                <div class="font-mono bg-white p-2 rounded mt-1" id="umweltCoherence">High</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-yellow-50 rounded-lg p-5 border-l-4 border-yellow-500">
+                        <h4 class="font-bold text-sm text-yellow-700 mb-3 flex items-center">
+                            <span class="w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center text-white text-xs mr-2">3</span>
+                            Thermodynamics
+                        </h4>
+                        <div class="space-y-2 text-xs">
+                            <div>
+                                <span class="font-semibold">Budget:</span>
+                                <div class="font-mono bg-white p-2 rounded mt-1" id="metabolicBudget">High</div>
+                            </div>
+                            <div>
+                                <span class="font-semibold">Entropy:</span>
+                                <div class="font-mono bg-white p-2 rounded mt-1" id="entropyLoad">Low</div>
+                            </div>
+                            <div>
+                                <span class="font-semibold">Energy:</span>
+                                <div class="font-mono bg-white p-2 rounded mt-1" id="energyReserve">100%</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- NEW: CIB Column -->
+                    <div class="bg-purple-50 rounded-lg p-5 border-l-4 border-purple-500">
+                        <h4 class="font-bold text-sm text-purple-700 mb-3 flex items-center">
+                            <span class="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center text-white text-xs mr-2">∫</span>
+                            CIB Integrity
+                        </h4>
+                        <div class="space-y-2 text-xs">
+                            <div>
+                                <span class="font-semibold">Coherence:</span>
+                                <div class="font-mono bg-white p-2 rounded mt-1" id="synthCibCoherence">100%</div>
+                            </div>
+                            <div>
+                                <span class="font-semibold">Depth:</span>
+                                <div class="font-mono bg-white p-2 rounded mt-1" id="synthLogicalDepth">High</div>
+                            </div>
+                            <div>
+                                <span class="font-semibold">Identity:</span>
+                                <div class="font-mono bg-white p-2 rounded mt-1" id="synthIdentityStatus">Robust</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Explanation Box -->
+                <div class="bg-gradient-to-r from-purple-100 to-blue-100 rounded-lg p-6 border-2 border-purple-300">
+                    <h5 class="font-bold text-lg text-purple-900 mb-3">📊 What's Happening:</h5>
+                    <p id="synthesisExplanation" class="text-gray-800 leading-relaxed"></p>
+                </div>
+                
+                <!-- Key Insight -->
+                <div class="mt-8 bg-gray-900 text-white rounded-lg p-6">
+                    <h5 class="font-bold text-lg text-yellow-400 mb-3">💡 The Critical Insight</h5>
+                    <p class="text-gray-200">
+                        Notice how all three pillars degrade <em>together</em>, causing the CIB to collapse. You cannot fix one without addressing the others. 
+                        This is why reductionist approaches fail—trying to "boost willpower" (thermodynamics) while ignoring 
+                        environmental stress (geometry) and meaning-making capacity (semiosis) is futile. <strong>The organism is a unified system, and the CIB is the integration point.</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Checkpoint 2 -->
+    <section class="py-12 bg-green-50">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-xl p-8 shadow-md border-l-4 border-green-500">
+                <h3 class="text-2xl font-bold text-green-900 mb-4">🔍 Check Your Understanding: Synthesis & CIB</h3>
+                <p class="text-gray-700 mb-6">Reflect on how the three pillars interact to create and maintain the CIB.</p>
+                
+                <div class="space-y-6">
+                    <div class="question">
+                        <p class="font-semibold mb-3">Q: Why can't you "fix" one pillar without addressing the others? Use the bacterium example to explain how CIB coherence depends on all three.</p>
+                        <textarea id="q-synthesis" 
+                                  class="w-full p-4 border-2 border-gray-200 rounded-lg focus:border-green-500 focus:outline-none" 
+                                  rows="4" 
+                                  placeholder="Explain the interdependence of the three pillars and CIB..."
+                                  aria-label="Synthesis question answer"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Semiosphere Section -->
     <section id="semiosphere" class="py-20 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 
-                <!-- Chart Column -->
                 <div>
                     <h2 class="text-3xl font-bold text-gray-900 mb-6">The Nested Semiosphere</h2>
                     <p class="text-gray-600 mb-8 text-lg">
@@ -183,7 +894,6 @@
                     
                     <div class="bg-white p-6 rounded-xl shadow-md">
                         <h4 class="text-lg font-bold text-gray-800 mb-4 text-center">Composition of the Agential Reality</h4>
-                        <!-- Chart Container -->
                         <div class="chart-container">
                             <canvas id="semiosphereChart"></canvas>
                         </div>
@@ -193,7 +903,6 @@
                     </div>
                 </div>
 
-                <!-- Process/Ladder Column -->
                 <div>
                     <h3 class="text-2xl font-bold text-gray-900 mb-8">The Ladder of Interpretation</h3>
                     <p class="text-gray-600 mb-8">
@@ -201,7 +910,6 @@
                     </p>
 
                     <div class="relative pl-4">
-                        <!-- Step 1 -->
                         <div class="step-item relative pl-12 pb-12">
                             <div class="step-line"></div>
                             <div class="absolute left-0 top-0 w-12 h-12 rounded-full bg-vibrant-cyan text-white flex items-center justify-center font-bold text-xl shadow-lg z-10">1</div>
@@ -212,7 +920,6 @@
                             </p>
                         </div>
 
-                        <!-- Step 2 -->
                         <div class="step-item relative pl-12 pb-12">
                             <div class="step-line"></div>
                             <div class="absolute left-0 top-0 w-12 h-12 rounded-full bg-vibrant-pink text-white flex items-center justify-center font-bold text-xl shadow-lg z-10">2</div>
@@ -223,7 +930,6 @@
                             </p>
                         </div>
 
-                        <!-- Step 3 -->
                         <div class="step-item relative pl-12">
                             <div class="absolute left-0 top-0 w-12 h-12 rounded-full bg-vibrant-purple text-white flex items-center justify-center font-bold text-xl shadow-lg z-10">3</div>
                             <h4 class="text-xl font-bold text-gray-900">Tertiary Mode (Symbol)</h4>
@@ -238,22 +944,22 @@
         </div>
     </section>
 
-    <!-- Agnostic Life Detection (CIB) Section -->
-    <section id="cib" class="py-20 bg-white">
+    <!-- ENHANCED: Agnostic Life Detection (CIB) Section -->
+    <section id="life-detection" class="py-20 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-gray-900 sm:text-4xl">Agnostic Life Detection</h2>
+                <h2 class="text-3xl font-bold text-gray-900 sm:text-4xl">Agnostic Life Detection: The CIB as Universal Signature</h2>
                 <p class="mt-4 text-lg text-gray-500 max-w-2xl mx-auto">
-                    How do we find life if it doesn't look like us? We look for the "Coherent Information Bit" (CIB).
+                    How do we find life if it doesn't look like us? We look for the "Coherent Information Bit" (CIB). The Assembly Index detects CIB complexity in molecules—the same principle from bacteria to humans to alien life.
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
                 <!-- Data Viz: Assembly Index -->
                 <div class="bg-gray-50 rounded-xl p-6 shadow-sm border border-gray-100">
                     <h3 class="text-xl font-bold text-gray-900 mb-2">The Molecular Assembly Index (MAI)</h3>
                     <p class="text-sm text-gray-500 mb-6">
-                        Assembly Theory (Cronin/Walker) states that molecules with high complexity cannot form by chance. There is a statistical "wall" at ~15 steps.
+                        Assembly Theory (Cronin/Walker) states that molecules with high complexity cannot form by chance. There is a statistical "wall" at ~15 steps. This threshold detects CIB presence.
                     </p>
                     <div class="chart-container">
                         <canvas id="cibChart"></canvas>
@@ -272,8 +978,80 @@
                     </div>
                     <div class="bg-vibrant-cyan text-white p-6 rounded-lg shadow-lg transform translate-x-8">
                         <h4 class="text-xl font-bold mb-2">3. The CIB Metric</h4>
-                        <p class="opacity-90">The <strong>Coherent Information Bit</strong> is the unit of agency. It quantifies the "Blueprint" required to assemble the molecule.</p>
+                        <p class="opacity-90">The <strong>Coherent Information Bit</strong> is the unit of agency. Assembly Index quantifies the "Blueprint" required to assemble the molecule—detecting CIB depth.</p>
                     </div>
+                </div>
+            </div>
+
+            <!-- NEW: Interactive Assembly Index Comparison -->
+            <div class="bg-gradient-to-br from-cyan-50 to-purple-50 rounded-xl p-8 shadow-lg">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">🔬 Calculate YOUR Assembly Index</h3>
+                <p class="text-center text-gray-600 mb-8">
+                    The same principle that detects life in molecules applies to you. Your identity is a CIB of enormous depth.
+                </p>
+                
+                <div class="space-y-4 max-w-4xl mx-auto">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-40 text-sm font-semibold text-gray-700">Simple Molecules</div>
+                        <div class="flex-1 assembly-bar bg-gray-300" style="width: 5%;">
+                            AI = 2-5
+                        </div>
+                        <div class="w-32 text-xs text-gray-500">No CIB</div>
+                    </div>
+                    
+                    <div class="flex items-center space-x-4">
+                        <div class="w-40 text-sm font-semibold text-gray-700">Amino Acids</div>
+                        <div class="flex-1 assembly-bar bg-gray-400" style="width: 12%;">
+                            AI = 5-12
+                        </div>
+                        <div class="w-32 text-xs text-gray-500">Approaching...</div>
+                    </div>
+                    
+                    <div class="flex items-center space-x-4">
+                        <div class="w-40 text-sm font-semibold text-cyan-700">CIB Threshold</div>
+                        <div class="flex-1 assembly-bar bg-cyan-500" style="width: 18%;">
+                            AI = 15+
+                        </div>
+                        <div class="w-32 text-xs font-bold text-cyan-700">Life Detected!</div>
+                    </div>
+                    
+                    <div class="flex items-center space-x-4">
+                        <div class="w-40 text-sm font-semibold text-pink-700">Single Cell</div>
+                        <div class="flex-1 assembly-bar bg-pink-500" style="width: 30%;">
+                            AI = 100+
+                        </div>
+                        <div class="w-32 text-xs text-pink-700">Modest CIB</div>
+                    </div>
+                    
+                    <div class="flex items-center space-x-4">
+                        <div class="w-40 text-sm font-semibold text-purple-700">Human</div>
+                        <div class="flex-1 assembly-bar bg-purple-600" style="width: 70%;">
+                            AI = 10,000+
+                        </div>
+                        <div class="w-32 text-xs text-purple-700">Deep CIB</div>
+                    </div>
+                    
+                    <div class="flex items-center space-x-4">
+                        <div class="w-40 text-sm font-semibold text-yellow-700">Alien Life?</div>
+                        <div class="flex-1 assembly-bar bg-gradient-to-r from-yellow-500 to-orange-500" style="width: 95%;">
+                            AI = ???
+                        </div>
+                        <div class="w-32 text-xs text-yellow-700">Unknown depth</div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 bg-white rounded-lg p-6 border-2 border-purple-300">
+                    <h4 class="font-bold text-purple-900 mb-3 text-lg">🌍 The Universal Principle</h4>
+                    <p class="text-gray-700 leading-relaxed">
+                        The Assembly Index doesn't care about chemistry. It detects <strong>organized information</strong>—the CIB. 
+                        A molecule with AI > 15 must have been assembled by a system capable of maintaining coherent information over time.
+                        That system is alive, whether it's based on DNA, silicon, or something we haven't imagined yet.
+                    </p>
+                    <p class="text-gray-700 leading-relaxed mt-4">
+                        <strong>You</strong> are a walking CIB hierarchy of incomprehensible depth. Billions of organized information bits, 
+                        maintained by the three pillars working in concert. The same physics that lets us detect bacterial life on Mars 
+                        explains why you exist as a coherent "you."
+                    </p>
                 </div>
             </div>
         </div>
@@ -284,7 +1062,6 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
                 
-                <!-- Left Text -->
                 <div class="lg:col-span-1">
                     <h2 class="text-3xl font-bold text-vibrant-yellow mb-6">The Thermodynamics of Good & Evil</h2>
                     <p class="text-gray-300 mb-6 leading-relaxed">
@@ -298,7 +1075,6 @@
                     </div>
                 </div>
 
-                <!-- Right Chart -->
                 <div class="lg:col-span-2">
                     <div class="bg-gray-800 rounded-xl p-6 shadow-xl">
                         <h4 class="text-lg font-bold text-white mb-4">Entropy vs. Agential Capacity</h4>
@@ -312,7 +1088,6 @@
                 </div>
             </div>
 
-            <!-- The Solution: Exo-Constructors -->
             <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
                 <div class="p-4">
                     <div class="w-16 h-16 bg-vibrant-cyan rounded-full flex items-center justify-center text-3xl mx-auto mb-4">🏛️</div>
@@ -337,7 +1112,7 @@
     <footer class="bg-gray-50 border-t border-gray-200 py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <p class="text-gray-500 text-sm">
-                Generated based on the analysis of: "Architecture of Agnostic Life Detection", "Agential Semiosphere", "Thermodynamics of Agency", and "Bio-Semiotic and Geometric Architecture".
+                Generated based on the analysis of: "Architecture of Agnostic Life Detection", "Agential Semiosphere", "Thermodynamics of Agency", "Bio-Semiotic and Geometric Architecture", and "Cross-Scale Information Organization and the Coherent Information Bit (CIB)".
             </p>
             <p class="text-gray-400 text-xs mt-2">
                 &copy; 2025 Agential Semiosphere Synthesis Project.
@@ -345,19 +1120,52 @@
         </div>
     </footer>
 
-    <!-- Chart.js Logic -->
+    <!-- Modal with Navigation -->
+    <div id="pillarModal" 
+         role="dialog" 
+         aria-modal="true" 
+         aria-labelledby="modalTitle"
+         class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4" 
+         style="display: none;">
+        <div class="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+            <div class="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-center z-10">
+                <h3 id="modalTitle" class="text-2xl font-bold text-gray-900"></h3>
+                <button onclick="closeModal()" 
+                        aria-label="Close modal"
+                        class="text-gray-400 hover:text-gray-600 text-3xl leading-none transition-colors">&times;</button>
+            </div>
+            <div id="modalContent" class="p-6 md:p-8" role="document"></div>
+            
+            <div class="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-4 flex justify-between items-center">
+                <button onclick="navigatePillar(-1)" 
+                        id="prevPillarBtn"
+                        class="flex items-center px-4 py-2 text-gray-600 hover:text-purple-700 hover:bg-white rounded-lg transition-colors"
+                        aria-label="Go to previous pillar">
+                    <span class="mr-2">←</span> Previous Pillar
+                </button>
+                <div class="text-sm font-medium text-gray-600">
+                    <span id="modalProgress" aria-live="polite">Pillar 1 of 3</span>
+                </div>
+                <button onclick="navigatePillar(1)" 
+                        id="nextPillarBtn"
+                        class="flex items-center px-4 py-2 text-gray-600 hover:text-purple-700 hover:bg-white rounded-lg transition-colors"
+                        aria-label="Go to next pillar">
+                    Next Pillar <span class="ml-2">→</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // --- Shared Configurations ---
+        // Chart.js Configuration
         Chart.defaults.font.family = "'Space Grotesk', sans-serif";
         Chart.defaults.color = '#4b5563';
 
-        // --- Label Wrapping Helper ---
         function wrapLabel(label) {
             if (label.length > 16) {
                 const words = label.split(' ');
                 const lines = [];
                 let currentLine = words[0];
-
                 for (let i = 1; i < words.length; i++) {
                     if (currentLine.length + 1 + words[i].length <= 16) {
                         currentLine += ' ' + words[i];
@@ -372,20 +1180,15 @@
             return label;
         }
 
-        // --- Tooltip Callback (Mandatory) ---
         const tooltipCallback = {
             title: function(tooltipItems) {
                 const item = tooltipItems[0];
                 let label = item.chart.data.labels[item.dataIndex];
-                if (Array.isArray(label)) {
-                    return label.join(' ');
-                } else {
-                    return label;
-                }
+                return Array.isArray(label) ? label.join(' ') : label;
             }
         };
 
-        // --- Chart 1: Semiosphere Nested Donut ---
+        // Chart 1: Semiosphere Donut
         const ctxSemio = document.getElementById('semiosphereChart').getContext('2d');
         new Chart(ctxSemio, {
             type: 'doughnut',
@@ -393,11 +1196,7 @@
                 labels: ['Umwelt (Biological Core)', 'Sociosphere (Cultural Layer)', 'Semiosphere (Universal Context)'],
                 datasets: [{
                     data: [40, 35, 25],
-                    backgroundColor: [
-                        '#db2777', // Pink (Core)
-                        '#06b6d4', // Cyan (Middle)
-                        '#4c1d95'  // Purple (Outer)
-                    ],
+                    backgroundColor: ['#db2777', '#06b6d4', '#4c1d95'],
                     borderWidth: 0,
                     hoverOffset: 10
                 }]
@@ -407,20 +1206,13 @@
                 maintainAspectRatio: false,
                 cutout: '65%',
                 plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: { padding: 20, usePointStyle: true }
-                    },
-                    tooltip: {
-                        callbacks: tooltipCallback,
-                        backgroundColor: 'rgba(17, 24, 39, 0.9)',
-                        padding: 12
-                    }
+                    legend: { position: 'bottom', labels: { padding: 20, usePointStyle: true } },
+                    tooltip: { callbacks: tooltipCallback, backgroundColor: 'rgba(17, 24, 39, 0.9)', padding: 12 }
                 }
             }
         });
 
-        // --- Chart 2: CIB Assembly Index (Bar) ---
+        // Chart 2: CIB Assembly Index
         const ctxCIB = document.getElementById('cibChart').getContext('2d');
         const cibLabels = ['Simple Molecules', 'Amino Acids', 'Complex Lipids', 'The CIB Threshold', 'Technosignatures'];
         const processedCibLabels = cibLabels.map(wrapLabel);
@@ -432,11 +1224,7 @@
                 datasets: [{
                     label: 'Molecular Assembly Index (Steps)',
                     data: [2, 5, 12, 16, 25],
-                    backgroundColor: (ctx) => {
-                        const val = ctx.raw;
-                        // Color change at threshold > 15
-                        return val > 15 ? '#06b6d4' : '#e5e7eb';
-                    },
+                    backgroundColor: (ctx) => ctx.raw > 15 ? '#06b6d4' : '#e5e7eb',
                     borderRadius: 6,
                     borderSkipped: false
                 }]
@@ -445,30 +1233,17 @@
                 responsive: true,
                 maintainAspectRatio: false,
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: { borderDash: [5, 5] },
-                        title: { display: true, text: 'Complexity Steps' }
-                    },
-                    x: {
-                        grid: { display: false }
-                    }
+                    y: { beginAtZero: true, grid: { borderDash: [5, 5] }, title: { display: true, text: 'Complexity Steps' } },
+                    x: { grid: { display: false } }
                 },
                 plugins: {
                     legend: { display: false },
-                    tooltip: {
-                        callbacks: tooltipCallback
-                    },
-                    annotation: {
-                        // Note: Requires annotation plugin, but strictly using core Chart.js here.
-                        // We simulate the threshold line visually in the data structure logic or via separate plugin if loaded.
-                        // Since external plugins aren't guaranteed, we rely on color coding (Grey vs Cyan).
-                    }
+                    tooltip: { callbacks: tooltipCallback }
                 }
             }
         });
 
-        // --- Chart 3: Entropy vs Agency (Line/Scatter) ---
+        // Chart 3: Entropy vs Agency
         const ctxEntropy = document.getElementById('entropyChart').getContext('2d');
         new Chart(ctxEntropy, {
             type: 'line',
@@ -478,7 +1253,7 @@
                     {
                         label: 'Agential Capacity (Logic/Ethics)',
                         data: [95, 75, 30, 5],
-                        borderColor: '#f59e0b', // Yellow
+                        borderColor: '#f59e0b',
                         backgroundColor: 'rgba(245, 158, 11, 0.1)',
                         borderWidth: 3,
                         tension: 0.4,
@@ -487,7 +1262,7 @@
                     {
                         label: 'Primate Reaction (Instinct)',
                         data: [20, 40, 85, 98],
-                        borderColor: '#db2777', // Pink
+                        borderColor: '#db2777',
                         borderWidth: 2,
                         borderDash: [5, 5],
                         tension: 0.4,
@@ -499,25 +1274,366 @@
                 responsive: true,
                 maintainAspectRatio: false,
                 scales: {
-                    y: {
-                        grid: { color: 'rgba(255, 255, 255, 0.1)' },
-                        ticks: { color: '#9ca3af' },
-                        title: { display: true, text: 'Functional Capacity %', color: '#9ca3af' }
-                    },
-                    x: {
-                        grid: { display: false },
-                        ticks: { color: '#9ca3af' }
-                    }
+                    y: { grid: { color: 'rgba(255, 255, 255, 0.1)' }, ticks: { color: '#9ca3af' }, title: { display: true, text: 'Functional Capacity %', color: '#9ca3af' } },
+                    x: { grid: { display: false }, ticks: { color: '#9ca3af' } }
                 },
                 plugins: {
-                    legend: {
-                        labels: { color: '#d1d5db' }
-                    },
-                    tooltip: {
-                        callbacks: tooltipCallback,
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)'
-                    }
+                    legend: { labels: { color: '#d1d5db' } },
+                    tooltip: { callbacks: tooltipCallback, backgroundColor: 'rgba(0, 0, 0, 0.8)' }
                 }
+            }
+        });
+
+        // CIB Assessment Tool
+        const geoSlider = document.getElementById('geometrySlider');
+        const semSlider = document.getElementById('semiosisSlider');
+        const thermSlider = document.getElementById('thermodynamicsSlider');
+        
+        [geoSlider, semSlider, thermSlider].forEach(slider => {
+            slider.addEventListener('input', updateCIBAssessment);
+        });
+        
+        function updateCIBAssessment() {
+            const geo = parseInt(geoSlider.value);
+            const sem = parseInt(semSlider.value);
+            const therm = parseInt(thermSlider.value);
+            
+            document.getElementById('geometryValue').textContent = geo + '%';
+            document.getElementById('semiosisValue').textContent = sem + '%';
+            document.getElementById('thermodynamicsValue').textContent = therm + '%';
+            
+            // Calculate CIB metrics (hidden formula)
+            const coherence = Math.round((geo * 0.33 + sem * 0.33 + therm * 0.34));
+            const minPillar = Math.min(geo, sem, therm);
+            
+            // Display coherence
+            document.getElementById('cibCoherence').textContent = coherence + '%';
+            document.getElementById('coherenceFill').style.width = coherence + '%';
+            
+            // Coherence label
+            let cohLabel = coherence > 75 ? 'High' : coherence > 50 ? 'Moderate' : 'Low';
+            let cohColor = coherence > 75 ? 'text-green-700' : coherence > 50 ? 'text-yellow-700' : 'text-red-700';
+            document.getElementById('coherenceLabel').textContent = cohLabel;
+            document.getElementById('coherenceLabel').className = 'text-xs mt-2 ' + cohColor;
+            
+            // Logical depth
+            let depth = coherence > 75 ? 'High' : coherence > 50 ? 'Medium' : 'Low';
+            let depthDesc = coherence > 75 ? 'Rich identity complexity' : coherence > 50 ? 'Moderate identity complexity' : 'Simplified identity structure';
+            document.getElementById('logicalDepth').textContent = depth;
+            document.getElementById('depthDescription').textContent = depthDesc;
+            
+            // Identity stability
+            let stability = minPillar > 70 ? 'Robust' : minPillar > 40 ? 'Fragile' : 'Unstable';
+            let weakest = geo < sem && geo < therm ? 'Geometry' : sem < therm ? 'Semiosis' : 'Thermodynamics';
+            let warning = minPillar < 70 ? `⚠️ Weakest link: ${weakest}` : '✓ All pillars stable';
+            document.getElementById('identityStability').textContent = stability;
+            document.getElementById('stabilityWarning').textContent = warning;
+            
+            // Self-reflection prompt
+            let prompt = '';
+            if (therm < 50) {
+                prompt = 'Your thermodynamic budget is low. <strong>Reflection:</strong> Are you chronically tired or under constant pressure? When was the last time you felt truly rested? How does stress affect your ability to be the person you want to be?';
+            } else if (sem < 50) {
+                prompt = 'Your semiotic capacity is constrained. <strong>Reflection:</strong> Has stress affected your ability to see meaning and nuance in events? Are you finding yourself thinking in black-and-white terms more often? What would help you regain perspective?';
+            } else if (geo < 50) {
+                prompt = 'Your geometric state space is highly constrained. <strong>Reflection:</strong> What physical, structural, or environmental constraints are limiting you right now? What would it take to expand your possibility space?';
+            } else {
+                prompt = 'Your CIB shows relatively good coherence across all three pillars. <strong>Reflection:</strong> How can you maintain this balance? What practices or conditions help you stay integrated?';
+            }
+            document.getElementById('promptText').innerHTML = prompt;
+        }
+        
+        // Initialize CIB assessment
+        updateCIBAssessment();
+
+        // Toggle scale examples
+        function toggleScale(scale) {
+            const content = document.getElementById('scale-' + scale);
+            const toggle = document.getElementById('toggle-' + scale);
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                toggle.textContent = 'Click to collapse ↑';
+            } else {
+                content.classList.add('hidden');
+                toggle.textContent = 'Click to expand ↓';
+            }
+        }
+
+        // Synthesis Interactive Stress Slider
+        const stressSlider = document.getElementById('stressSlider');
+        const stressValue = document.getElementById('stressValue');
+        
+        stressSlider.addEventListener('input', function() {
+            const stress = parseInt(this.value);
+            stressValue.textContent = stress + '%';
+            updateSynthesis(stress);
+        });
+        
+        function updateSynthesis(stress) {
+            // Geometry
+            if (stress < 30) {
+                document.getElementById('manifoldState').textContent = 'Normal';
+                document.getElementById('stateSpace').textContent = '100%';
+                document.getElementById('markovState').textContent = 'Intact';
+            } else if (stress < 70) {
+                document.getElementById('manifoldState').textContent = 'Constrained';
+                document.getElementById('stateSpace').textContent = (100 - stress/2) + '%';
+                document.getElementById('markovState').textContent = 'Stressed';
+            } else {
+                document.getElementById('manifoldState').textContent = 'Collapsed';
+                document.getElementById('stateSpace').textContent = (100 - stress) + '%';
+                document.getElementById('markovState').textContent = 'Breaking Down';
+            }
+            
+            // Semiosis
+            if (stress < 30) {
+                document.getElementById('modelingSystem').textContent = 'Beta Mode';
+                document.getElementById('signInterpretation').textContent = 'Active';
+                document.getElementById('umweltCoherence').textContent = 'High';
+            } else if (stress < 70) {
+                document.getElementById('modelingSystem').textContent = 'Alpha/Beta';
+                document.getElementById('signInterpretation').textContent = 'Degrading';
+                document.getElementById('umweltCoherence').textContent = 'Medium';
+            } else {
+                document.getElementById('modelingSystem').textContent = 'Alpha Mode';
+                document.getElementById('signInterpretation').textContent = 'Minimal';
+                document.getElementById('umweltCoherence').textContent = 'Low';
+            }
+            
+            // Thermodynamics
+            if (stress < 30) {
+                document.getElementById('metabolicBudget').textContent = 'High';
+                document.getElementById('entropyLoad').textContent = 'Low';
+                document.getElementById('energyReserve').textContent = (100 - stress/3) + '%';
+            } else if (stress < 70) {
+                document.getElementById('metabolicBudget').textContent = 'Medium';
+                document.getElementById('entropyLoad').textContent = 'Medium';
+                document.getElementById('energyReserve').textContent = (100 - stress) + '%';
+            } else {
+                document.getElementById('metabolicBudget').textContent = 'Critical';
+                document.getElementById('entropyLoad').textContent = 'High';
+                document.getElementById('energyReserve').textContent = Math.max(5, 100 - stress*1.5) + '%';
+            }
+            
+            // CIB Integrity
+            const cibCoherence = Math.max(5, 100 - stress);
+            const depth = cibCoherence > 75 ? 'High' : cibCoherence > 50 ? 'Medium' : 'Low';
+            const identity = cibCoherence > 75 ? 'Robust' : cibCoherence > 50 ? 'Fragile' : 'Collapsed';
+            
+            document.getElementById('synthCibCoherence').textContent = cibCoherence + '%';
+            document.getElementById('synthLogicalDepth').textContent = depth;
+            document.getElementById('synthIdentityStatus').textContent = identity;
+            
+            // Explanation
+            let explanation = '';
+            if (stress < 30) {
+                explanation = 'The bacterium is in <strong>optimal conditions</strong>. All three pillars are functioning normally: the geometric manifold allows full state exploration, sign interpretation is active, and there is surplus metabolic energy. <strong>CIB Coherence is HIGH</strong>—the organism maintains a robust, integrated identity. It can engage in exploratory behavior, learning, and adaptation.';
+            } else if (stress < 50) {
+                explanation = 'Environmental stress is beginning to affect the system. The manifold is <strong>constraining available states</strong>, sign interpretation is becoming rigid, and metabolic energy is being diverted to stress response. <strong>CIB Coherence is DEGRADING</strong>—the identity is starting to fragment. The organism shifts from exploration to exploitation mode.';
+            } else if (stress < 70) {
+                explanation = 'The system is under <strong>significant stress</strong>. The geometric state space has shrunk dramatically, the bacterium has regressed to simpler sign interpretation, and metabolic reserves are running low. <strong>CIB Coherence is FRAGILE</strong>—the identity is barely holding together. The organism prioritizes immediate survival over long-term optimization.';
+            } else {
+                explanation = 'The system has reached the <strong>Sapolsky Limit</strong>. The manifold has collapsed to only survival states, semiosis has degraded to pure Alpha Mode reflexes, and metabolic energy is critically depleted. <strong>CIB COHERENCE HAS COLLAPSED</strong>—there is no longer a coherent "self." The organism is purely reactive. This is why "evil" emerges under extreme stress: not as a choice, but as the inevitable collapse of agency when all three pillars fail simultaneously and the CIB can no longer be maintained.';
+            }
+            document.getElementById('synthesisExplanation').innerHTML = explanation;
+        }
+        
+        updateSynthesis(0);
+
+        // Answer checking
+        function checkAnswer(questionName, correctAnswer) {
+            const selected = document.querySelector(`input[name="${questionName}"]:checked`);
+            const resultDiv = document.getElementById(questionName + '-result');
+            
+            if (!selected) {
+                resultDiv.innerHTML = '<div class="p-3 bg-yellow-100 border border-yellow-300 rounded text-yellow-800">Please select an answer first.</div>';
+                return;
+            }
+            
+            if (selected.value === correctAnswer) {
+                resultDiv.innerHTML = '<div class="p-3 bg-green-100 border border-green-300 rounded text-green-800"><strong>✓ Correct!</strong> You understand this concept.</div>';
+            } else {
+                resultDiv.innerHTML = '<div class="p-3 bg-red-100 border border-red-300 rounded text-red-800"><strong>✗ Not quite.</strong> Review the material and try again.</div>';
+            }
+        }
+
+        // Modal functionality
+        let currentPillar = 0;
+        const totalPillars = 3;
+        
+        const modalData = [
+            {
+                title: "Geometry & Topology: The Container",
+                content: `
+                    <div class="space-y-6">
+                        <div class="bg-cyan-50 border-l-4 border-cyan-500 p-5 rounded">
+                            <h4 class="font-bold text-lg mb-2">Invariant Set Theory (IST)</h4>
+                            <p>Reality isn't a smooth continuum but a fractal, non-Archimedean geometric structure embedded in state space.</p>
+                        </div>
+                        
+                        <h4 class="font-bold text-xl text-gray-900 mt-6 mb-4">Key Concepts:</h4>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-gray-50 p-5 rounded-lg border-l-4 border-cyan-400">
+                                <h5 class="font-bold text-cyan-700 mb-2">🗺️ The Agential Manifold</h5>
+                                <p class="text-sm text-gray-700">The map of all valid states an organism can occupy. Your manifold is the geometric constraint defining what you CAN be.</p>
+                            </div>
+                            
+                            <div class="bg-gray-50 p-5 rounded-lg border-l-4 border-cyan-400">
+                                <h5 class="font-bold text-cyan-700 mb-2">🔲 Markov Blanket</h5>
+                                <p class="text-sm text-gray-700">The boundary between "self" and "environment" is a geometric surface where agency begins.</p>
+                            </div>
+                            
+                            <div class="bg-gray-50 p-5 rounded-lg border-l-4 border-cyan-400">
+                                <h5 class="font-bold text-cyan-700 mb-2">🌀 Fractal Hierarchy</h5>
+                                <p class="text-sm text-gray-700">Nested boundaries at multiple scales: cells within organs within organisms within ecosystems.</p>
+                            </div>
+                            
+                            <div class="bg-gray-50 p-5 rounded-lg border-l-4 border-cyan-400">
+                                <h5 class="font-bold text-cyan-700 mb-2">📊 State Space</h5>
+                                <p class="text-sm text-gray-700">Not all states are physically possible. The topology constrains which trajectories you can follow.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-purple-50 border-l-4 border-purple-500 p-5 rounded mt-6">
+                            <p class="font-semibold text-purple-900 mb-2">🔗 Connection to CIB:</p>
+                            <p class="text-gray-700">This geometry is the <strong>CONTAINER</strong> for agency—the geometric layer of your CIB. It defines the possibility space before meaning emerges.</p>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "Biosemiotics: The Translator",
+                content: `
+                    <div class="space-y-6">
+                        <div class="bg-pink-50 border-l-4 border-pink-500 p-5 rounded">
+                            <h4 class="font-bold text-lg mb-2">Thomas Sebeok's Modeling Systems</h4>
+                            <p>Life is not just chemistry—it is the interpretation of signs. Biosemiotics is the bridge between matter and mind.</p>
+                        </div>
+                        
+                        <h4 class="font-bold text-xl text-gray-900 mt-6 mb-4">The Three Levels of Semiosis:</h4>
+                        
+                        <div class="space-y-4">
+                            <div class="bg-gray-50 p-5 rounded-lg border-l-4 border-cyan-400">
+                                <h5 class="font-bold text-gray-900 mb-2">1. Primary Modeling System (Umwelt)</h5>
+                                <p class="text-sm text-gray-700 mb-3">The organism's subjective reality. A tick's world has only 3 signs: warmth, butyric acid, hairless skin.</p>
+                            </div>
+                            
+                            <div class="bg-gray-50 p-5 rounded-lg border-l-4 border-pink-400">
+                                <h5 class="font-bold text-gray-900 mb-2">2. Secondary Modeling System (Culture)</h5>
+                                <p class="text-sm text-gray-700 mb-3">Humans add layers—language, ritual, art—that create shared meaning spaces beyond biology.</p>
+                            </div>
+                            
+                            <div class="bg-gray-50 p-5 rounded-lg border-l-4 border-purple-400">
+                                <h5 class="font-bold text-gray-900 mb-2">3. Tertiary Modeling System (Symbols)</h5>
+                                <p class="text-sm text-gray-700 mb-3">Abstract formalism: mathematics, code, logic. We create "virtual models" and impose them back onto reality.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-pink-100 p-5 rounded-lg border-2 border-pink-300">
+                            <h5 class="font-bold text-pink-900 mb-3 text-lg">💡 Core Insight: Semiosis = Life</h5>
+                            <p class="text-gray-800">If a system can <strong>interpret</strong> signs (not just react to stimuli), it is alive.</p>
+                        </div>
+                        
+                        <div class="bg-purple-50 border-l-4 border-purple-500 p-5 rounded">
+                            <p class="font-semibold text-purple-900 mb-2">🔗 Connection to CIB:</p>
+                            <p class="text-gray-700">Biosemiotics is the <strong>TRANSLATOR</strong>—the semiotic layer of your CIB. Your PRF (Phenomenological Reference Framework) IS this layer.</p>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "Thermodynamics: The Cost",
+                content: `
+                    <div class="space-y-6">
+                        <div class="bg-yellow-50 border-l-4 border-yellow-500 p-5 rounded">
+                            <h4 class="font-bold text-lg mb-2">Non-Equilibrium Physics</h4>
+                            <p>Maintaining ANY organized structure requires constant energy input. Agency is not free; it has a thermodynamic cost that must be paid continuously.</p>
+                        </div>
+                        
+                        <h4 class="font-bold text-xl text-gray-900 mt-6 mb-4">The Three Thermodynamic Laws of Agency:</h4>
+                        
+                        <div class="space-y-4">
+                            <div class="bg-gray-50 p-5 rounded-lg border-l-4 border-yellow-500">
+                                <h5 class="font-bold text-yellow-700 mb-3 text-lg">1. Entropy Always Increases</h5>
+                                <p class="text-sm text-gray-700 mb-3">Life creates local pockets of order by exporting entropy—but this requires constant work.</p>
+                            </div>
+                            
+                            <div class="bg-gray-50 p-5 rounded-lg border-l-4 border-red-500">
+                                <h5 class="font-bold text-red-700 mb-3 text-lg">2. The Sapolsky Limit</h5>
+                                <p class="text-sm text-gray-700 mb-3">Under stress, the prefrontal cortex shuts down. We lose access to complex reasoning and revert to survival mode.</p>
+                            </div>
+                            
+                            <div class="bg-gray-50 p-5 rounded-lg border-l-4 border-green-500">
+                                <h5 class="font-bold text-green-700 mb-3 text-lg">3. Goodness is Expensive</h5>
+                                <p class="text-sm text-gray-700 mb-3">Ethical reasoning requires massive metabolic cost. We build institutions to offload this cost.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-900 text-white p-6 rounded-lg">
+                            <h5 class="font-bold text-yellow-400 mb-3 text-lg">The Fundamental Formula</h5>
+                            <div class="bg-gray-800 p-4 rounded font-mono text-sm mb-4 text-center">
+                                Agential Capacity = f(Energy, Entropy, Modeling System)
+                            </div>
+                            <p class="text-sm text-gray-300">When entropy exceeds metabolic capacity, the CIB collapses.</p>
+                        </div>
+                        
+                        <div class="bg-purple-50 border-l-4 border-purple-500 p-5 rounded">
+                            <p class="font-semibold text-purple-900 mb-2">🔗 Connection to CIB:</p>
+                            <p class="text-gray-700">Thermodynamics is the <strong>COST</strong> of maintaining your CIB. No surplus energy = no agency = no coherent identity.</p>
+                        </div>
+                    </div>
+                `
+            }
+        ];
+
+        function openModal(pillarIndex) {
+            currentPillar = pillarIndex;
+            document.getElementById('modalTitle').textContent = modalData[pillarIndex].title;
+            document.getElementById('modalContent').innerHTML = modalData[pillarIndex].content;
+            document.getElementById('modalProgress').textContent = `Pillar ${pillarIndex + 1} of ${totalPillars}`;
+            
+            const modal = document.getElementById('pillarModal');
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            modal.focus();
+        }
+
+        function navigatePillar(direction) {
+            currentPillar = (currentPillar + direction + totalPillars) % totalPillars;
+            document.getElementById('modalTitle').textContent = modalData[currentPillar].title;
+            document.getElementById('modalContent').innerHTML = modalData[currentPillar].content;
+            document.getElementById('modalProgress').textContent = `Pillar ${currentPillar + 1} of ${totalPillars}`;
+            document.getElementById('modalContent').scrollTop = 0;
+        }
+
+        window.closeModal = function() {
+            document.getElementById('pillarModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        };
+
+        document.querySelectorAll('.interactive-card').forEach((card) => {
+            card.addEventListener('click', () => {
+                const pillarIndex = parseInt(card.getAttribute('data-pillar'));
+                openModal(pillarIndex);
+            });
+            
+            card.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    const pillarIndex = parseInt(card.getAttribute('data-pillar'));
+                    openModal(pillarIndex);
+                }
+            });
+        });
+
+        document.getElementById('pillarModal').addEventListener('click', (e) => {
+            if (e.target.id === 'pillarModal') closeModal();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && document.getElementById('pillarModal').style.display === 'flex') {
+                closeModal();
             }
         });
     </script>
