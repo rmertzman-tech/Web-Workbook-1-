@@ -753,6 +753,74 @@
                     </div>
                 </div>
                 
+                <!-- NEW: Identity Layers Visual -->
+                <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-6 mb-8 border-2 border-indigo-300">
+                    <h4 class="text-xl font-bold text-gray-900 mb-4 text-center">🧠 Your Identity Has Three Layers</h4>
+                    <p class="text-sm text-gray-600 text-center mb-6">
+                        Watch which layer is active as stress increases. When you're exhausted or terrified, you don't just "lose willpower"—you lose access to entire layers of your identity.
+                    </p>
+                    
+                    <div class="space-y-3 max-w-3xl mx-auto">
+                        <!-- Layer 3: Tertiary -->
+                        <div id="layer3" class="transition-all duration-300 rounded-lg border-2 p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold mr-3">3</div>
+                                    <div>
+                                        <h5 class="font-bold text-gray-900">Abstract Thought</h5>
+                                        <p class="text-xs text-gray-600">Tertiary Modeling System</p>
+                                    </div>
+                                </div>
+                                <div class="text-xs font-bold text-purple-700">⚡ HIGH ENERGY</div>
+                            </div>
+                            <div class="text-sm text-gray-700 ml-13">
+                                <p class="mb-1"><strong>Functions:</strong> Ethics, mathematics, long-term planning, scientific reasoning</p>
+                                <p class="text-xs italic text-purple-600">The question: "What SHOULD I do?"</p>
+                            </div>
+                        </div>
+
+                        <!-- Layer 2: Secondary -->
+                        <div id="layer2" class="transition-all duration-300 rounded-lg border-2 p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 rounded-full bg-cyan-600 text-white flex items-center justify-center font-bold mr-3">2</div>
+                                    <div>
+                                        <h5 class="font-bold text-gray-900">Cultural Programming</h5>
+                                        <p class="text-xs text-gray-600">Secondary Modeling System</p>
+                                    </div>
+                                </div>
+                                <div class="text-xs font-bold text-cyan-700">⚡ MEDIUM ENERGY</div>
+                            </div>
+                            <div class="text-sm text-gray-700 ml-13">
+                                <p class="mb-1"><strong>Functions:</strong> Language, social norms, professional codes, habits</p>
+                                <p class="text-xs italic text-cyan-600">The question: "What does my GROUP do?"</p>
+                            </div>
+                        </div>
+
+                        <!-- Layer 1: Primary -->
+                        <div id="layer1" class="transition-all duration-300 rounded-lg border-2 p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 rounded-full bg-red-600 text-white flex items-center justify-center font-bold mr-3">1</div>
+                                    <div>
+                                        <h5 class="font-bold text-gray-900">Biological Survival</h5>
+                                        <p class="text-xs text-gray-600">Primary Modeling System</p>
+                                    </div>
+                                </div>
+                                <div class="text-xs font-bold text-red-700">⚡ LOW ENERGY</div>
+                            </div>
+                            <div class="text-sm text-gray-700 ml-13">
+                                <p class="mb-1"><strong>Functions:</strong> Fight/flight, basic drives, reflexes, pure reaction</p>
+                                <p class="text-xs italic text-red-600">The question: "Am I SAFE?"</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 bg-white rounded-lg p-4 border-l-4 border-indigo-500">
+                        <p id="layerExplanation" class="text-sm text-gray-700"></p>
+                    </div>
+                </div>
+                
                 <!-- Four Columns (Three Pillars + CIB) -->
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
                     <div class="bg-cyan-50 rounded-lg p-5 border-l-4 border-cyan-500">
@@ -1153,6 +1221,47 @@
                     <p class="text-xs text-yellow-200 mt-2">
                         This connects to ATCF (Adaptive Temporal Consistency Function)—maintaining coherent identity across past, present, and future.
                     </p>
+                </div>
+
+                <!-- NEW: Epistemic Humility Frame -->
+                <div class="mt-8 bg-white/10 backdrop-blur-sm border-2 border-white/30 rounded-lg p-6">
+                    <h4 class="text-xl font-bold mb-4 text-white flex items-center">
+                        <span class="text-2xl mr-3">🔬</span>
+                        Important: These Are Tools, Not Truth
+                    </h4>
+                    <div class="space-y-3 text-purple-100">
+                        <p>
+                            The frameworks you're learning—<strong class="text-yellow-300">CIB, PRF, SAGE, ATCF</strong>—are:
+                        </p>
+                        <ul class="space-y-2 ml-6">
+                            <li class="flex items-start">
+                                <span class="text-cyan-300 mr-2">•</span>
+                                <span><strong class="text-cyan-200">Navigational aids</strong> - they help you orient, not exhaustive maps of reality</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-cyan-300 mr-2">•</span>
+                                <span><strong class="text-cyan-200">Provisional scaffolds</strong> - subject to revision as you learn more</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-cyan-300 mr-2">•</span>
+                                <span><strong class="text-cyan-200">Abductive tools</strong> - they improve your reasoning under uncertainty</span>
+                            </li>
+                        </ul>
+                        <div class="bg-purple-900/30 p-4 rounded-lg mt-4 border-l-4 border-yellow-400">
+                            <p class="text-sm">
+                                As philosopher <strong class="text-yellow-300">Charles Sanders Peirce</strong> emphasized: <em>We can never know the final truth, but we can build better and better tools for reasoning.</em> The model is not the territory.
+                            </p>
+                        </div>
+                        <div class="mt-4">
+                            <p class="font-semibold text-white mb-2">What This Means for You:</p>
+                            <ul class="space-y-1 ml-6 text-sm">
+                                <li>✓ Don't treat these frameworks as dogma</li>
+                                <li>✓ Use them when they clarify, set them aside when they don't</li>
+                                <li>✓ You're allowed to outgrow them and build better ones</li>
+                                <li>✓ The goal isn't to memorize THE answer—it's to develop YOUR reasoning capacity</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1901,6 +2010,37 @@
             document.getElementById('synthLogicalDepth').textContent = depth;
             document.getElementById('synthIdentityStatus').textContent = identity;
             
+            // Identity Layers Visual Update
+            const layer1 = document.getElementById('layer1');
+            const layer2 = document.getElementById('layer2');
+            const layer3 = document.getElementById('layer3');
+            const layerExplanation = document.getElementById('layerExplanation');
+            
+            // Reset all layers
+            layer1.className = 'transition-all duration-300 rounded-lg border-2 p-4 border-gray-300 bg-white opacity-50';
+            layer2.className = 'transition-all duration-300 rounded-lg border-2 p-4 border-gray-300 bg-white opacity-50';
+            layer3.className = 'transition-all duration-300 rounded-lg border-2 p-4 border-gray-300 bg-white opacity-50';
+            
+            if (stress < 30) {
+                // Layer 3 active (Abstract thought online)
+                layer3.className = 'transition-all duration-300 rounded-lg border-2 p-4 border-purple-500 bg-purple-50 shadow-lg transform scale-105';
+                layer2.className = 'transition-all duration-300 rounded-lg border-2 p-4 border-cyan-400 bg-cyan-50 opacity-70';
+                layer1.className = 'transition-all duration-300 rounded-lg border-2 p-4 border-gray-300 bg-white opacity-40';
+                layerExplanation.innerHTML = '<strong class="text-purple-700">Layer 3 Active:</strong> You have access to abstract reasoning, ethical thought, and long-term planning. This is your full cognitive capacity—you can ask "What SHOULD I do?" and engage in complex moral reasoning.';
+            } else if (stress < 70) {
+                // Layer 2 active (Falling back to cultural programming)
+                layer3.className = 'transition-all duration-300 rounded-lg border-2 p-4 border-gray-300 bg-gray-100 opacity-30';
+                layer2.className = 'transition-all duration-300 rounded-lg border-2 p-4 border-cyan-500 bg-cyan-50 shadow-lg transform scale-105';
+                layer1.className = 'transition-all duration-300 rounded-lg border-2 p-4 border-red-400 bg-red-50 opacity-60';
+                layerExplanation.innerHTML = '<strong class="text-cyan-700">Layer 2 Active:</strong> You\'ve lost access to abstract thought. You\'re operating on habits, social norms, and professional training. You ask "What does my GROUP do?" rather than "What SHOULD I do?" You can still function, but your reasoning is more rigid.';
+            } else {
+                // Layer 1 active (Pure survival mode)
+                layer3.className = 'transition-all duration-300 rounded-lg border-2 p-4 border-gray-300 bg-gray-100 opacity-20';
+                layer2.className = 'transition-all duration-300 rounded-lg border-2 p-4 border-gray-300 bg-gray-100 opacity-30';
+                layer1.className = 'transition-all duration-300 rounded-lg border-2 p-4 border-red-600 bg-red-50 shadow-lg transform scale-105';
+                layerExplanation.innerHTML = '<strong class="text-red-700">Layer 1 Active:</strong> <strong>Sapolsky Limit breached.</strong> You\'ve collapsed to pure survival mode. No abstract thought, no cultural programming—just fight/flight reflexes. You ask only "Am I SAFE?" This is why exhausted nurses make mistakes, why sleep-deprived students cheat, why hungry people shoplift. It\'s not moral failure—it\'s <strong>thermodynamic truncation</strong> of your identity layers.';
+            }
+            
             // Explanation
             let explanation = '';
             if (stress < 30) {
@@ -1986,6 +2126,58 @@
                         <div class="bg-pink-50 border-l-4 border-pink-500 p-5 rounded">
                             <h4 class="font-bold text-lg mb-2">Thomas Sebeok's Modeling Systems</h4>
                             <p>Life is not just chemistry—it is the interpretation of signs. Biosemiotics is the bridge between matter and mind.</p>
+                        </div>
+
+                        <h4 class="font-bold text-xl text-gray-900 mt-6 mb-4">The Three Elements of Meaning-Making:</h4>
+                        
+                        <div class="bg-gradient-to-r from-cyan-50 to-blue-50 p-6 rounded-lg border-2 border-cyan-300 mb-6">
+                            <p class="text-sm text-gray-600 mb-4">Philosopher Charles Sanders Peirce identified three universal categories that structure all experience. Understanding these helps us see how meaning actually works:</p>
+                            
+                            <div class="space-y-4">
+                                <div class="bg-white p-4 rounded-lg border-l-4 border-cyan-500">
+                                    <h5 class="font-bold text-cyan-700 mb-2">The Sign (Raw Data)</h5>
+                                    <p class="text-sm text-gray-700 mb-2">The pattern hitting your senses—photons, molecules, sounds. Pure potential before interpretation.</p>
+                                    <p class="text-xs text-cyan-600 italic">Peirce called this "Firstness"—quality, possibility, what's just there</p>
+                                    <div class="bg-cyan-50 p-3 rounded mt-2">
+                                        <p class="text-xs font-semibold text-cyan-900 mb-1">Example:</p>
+                                        <p class="text-xs text-gray-700">The visual pattern of a stop sign: red octagon with white letters</p>
+                                    </div>
+                                </div>
+
+                                <div class="bg-white p-4 rounded-lg border-l-4 border-pink-500">
+                                    <h5 class="font-bold text-pink-700 mb-2">The Signal (Force/Constraint)</h5>
+                                    <p class="text-sm text-gray-700 mb-2">The actual physical event or instruction. The brute fact that compels response.</p>
+                                    <p class="text-xs text-pink-600 italic">Peirce called this "Secondness"—reaction, encounter, what happens</p>
+                                    <div class="bg-pink-50 p-3 rounded mt-2">
+                                        <p class="text-xs font-semibold text-pink-900 mb-1">Example:</p>
+                                        <p class="text-xs text-gray-700">The legal mandate to stop, the hormone spike when you see danger, the bioelectric pulse telling a cell to differentiate</p>
+                                    </div>
+                                </div>
+
+                                <div class="bg-white p-4 rounded-lg border-l-4 border-purple-500">
+                                    <h5 class="font-bold text-purple-700 mb-2">The Interpretant (Meaning You Make)</h5>
+                                    <p class="text-sm text-gray-700 mb-2">How your CIB reads and responds. The habit, law, or understanding that mediates.</p>
+                                    <p class="text-xs text-purple-600 italic">Peirce called this "Thirdness"—mediation, generality, what it means</p>
+                                    <div class="bg-purple-50 p-3 rounded mt-2">
+                                        <p class="text-xs font-semibold text-purple-900 mb-1">Example:</p>
+                                        <p class="text-xs text-gray-700">"I should stop" (driver), "That's a traffic control device" (engineer), "Red means danger" (child)—same sign, different interpretants</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-yellow-50 border-2 border-yellow-400 rounded-lg p-5">
+                            <h5 class="font-bold text-yellow-900 mb-3">🔑 Why This Matters: The Challenger Disaster</h5>
+                            <p class="text-sm text-gray-700 mb-3">
+                                Roger Boisjoly and NASA management saw the <strong>same sign</strong> (O-ring erosion data), but their different CIBs created different <strong>interpretants</strong>:
+                            </p>
+                            <ul class="text-sm text-gray-700 space-y-2 ml-4">
+                                <li>• <strong>Boisjoly's CIB (engineer):</strong> "This is a fatal flaw—we must delay"</li>
+                                <li>• <strong>Management's CIB (schedule pressure):</strong> "This is acceptable risk—we must launch"</li>
+                            </ul>
+                            <p class="text-sm text-gray-700 mt-3">
+                                Same data. Different meaning-making systems. Catastrophic consequences.
+                            </p>
                         </div>
                         
                         <h4 class="font-bold text-xl text-gray-900 mt-6 mb-4">The Three Levels of Semiosis:</h4>
